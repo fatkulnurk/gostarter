@@ -29,7 +29,7 @@ func New(adapter *pkg.Adapter, delivery *pkg.Delivery) pkg.IModule {
 
 func (m *Module) GetInfo() *pkg.Module {
 	return &pkg.Module{
-		Name:   "Module",
+		Name:   "Example",
 		Prefix: "example",
 	}
 }
@@ -68,7 +68,7 @@ func (m *Module) RegisterSchedule() {
 	}
 
 	// register schedule
-	entryID, err := m.Delivery.Schedule.Register("@every 1m", asynq.NewTask(m.GetInfo().Prefix+":schedule::example", nil))
+	entryID, err := m.Delivery.Schedule.Register("* * * * *", asynq.NewTask(m.GetInfo().Prefix+":schedule::example", nil))
 	if err != nil {
 		panic(err)
 	}
