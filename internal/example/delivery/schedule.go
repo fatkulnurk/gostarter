@@ -17,7 +17,7 @@ func NewScheduleDelivery(usecase domain.IUsecase) *ScheduleDelivery {
 	}
 }
 
-func (d QueueDelivery) HandleTaskScheduleExample(ctx context.Context, task *asynq.Task) error {
+func (s ScheduleDelivery) HandleTaskScheduleExample(ctx context.Context, task *asynq.Task) error {
 	fmt.Printf("HandleTaskScheduleExample")
 	return nil
 }

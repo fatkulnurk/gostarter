@@ -52,11 +52,14 @@ func (m *Module) RegisterHTTP() {
 
 func (m *Module) RegisterTask() {
 	if m.Delivery.Task == nil {
-		panic("queue is nil")
+		panic("task is nil")
 	}
 
-	deliveryQueue := delivery.NewDeliveryQueue(m.Usecase)
-	m.Delivery.Task.HandleFunc(m.GetInfo().Prefix+":send", deliveryQueue.HandleTaskExample)
+	deliveryTask := delivery.NewDeliveryQueue(m.Usecase)
+	m.Delivery.Task.HandleFunc(m.GetInfo().Prefix+":example", deliveryTask.HandleExample)
+
+	deliverySchedule := delivery.NewScheduleDelivery(m.Usecase)
+	m.Delivery.Task.HandleFunc(m.GetInfo().Prefix+":schedule::example", deliverySchedule.HandleTaskScheduleExample)
 }
 
 func (m *Module) RegisterSchedule() {
@@ -65,7 +68,7 @@ func (m *Module) RegisterSchedule() {
 	}
 
 	// register schedule
-	entryID, err := m.Delivery.Schedule.Register("@every 1m", asynq.NewTask(m.GetInfo().Prefix+":send", nil))
+	entryID, err := m.Delivery.Schedule.Register("@every 1m", asynq.NewTask(m.GetInfo().Prefix+":schedule::example", nil))
 	if err != nil {
 		panic(err)
 	}
