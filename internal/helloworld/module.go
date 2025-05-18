@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"github.com/fatkulnurk/gostarter/pkg/interfaces"
 
-	"github.com/fatkulnurk/gostarter/internal/example/delivery"
-	"github.com/fatkulnurk/gostarter/internal/example/domain"
-	"github.com/fatkulnurk/gostarter/internal/example/repository"
-	"github.com/fatkulnurk/gostarter/internal/example/usecase"
+	"github.com/fatkulnurk/gostarter/internal/helloworld/delivery"
+	"github.com/fatkulnurk/gostarter/internal/helloworld/domain"
+	"github.com/fatkulnurk/gostarter/internal/helloworld/repository"
+	"github.com/fatkulnurk/gostarter/internal/helloworld/usecase"
 	"github.com/fatkulnurk/gostarter/pkg"
 	"github.com/hibiken/asynq"
 )
@@ -31,8 +31,8 @@ func New(adapter *pkg.Adapter, delivery *pkg.Delivery) interfaces.IModule {
 
 func (m *Module) GetInfo() *interfaces.Module {
 	return &interfaces.Module{
-		Name:   "Example",
-		Prefix: "example",
+		Name:   "HelloWorld",
+		Prefix: "hello-world",
 	}
 }
 

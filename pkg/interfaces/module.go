@@ -1,4 +1,4 @@
-package pkg
+package interfaces
 
 type IModule interface {
 	GetInfo() *Module

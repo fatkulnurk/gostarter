@@ -3,6 +3,7 @@ package http
 import (
 	"context"
 	"fmt"
+	"github.com/fatkulnurk/gostarter/pkg/interfaces"
 	"os"
 	"os/signal"
 	"syscall"
@@ -53,7 +54,7 @@ func Serve(cfg *config.Config) {
 
 	// Register modules
 	func() {
-		var modules []pkg.IModule
+		var modules []interfaces.IModule
 		modules = append(modules, example.New(adapter, delivery))
 
 		fmt.Printf("-------Register module------\n")
