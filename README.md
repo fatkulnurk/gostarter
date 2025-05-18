@@ -8,6 +8,7 @@ A starter template for Go applications with support for HTTP services and backgr
 - Background worker using Asynq
 - MySQL and Redis support
 - Docker and Docker Compose ready
+- Structured logging with Zap
 
 > **Note:** This project is currently under development and not production ready.
 
@@ -58,7 +59,8 @@ docker-compose down
 │       ├── repository/ # Data access layer
 │       └── usecase/    # Business logic
 ├── pkg/                # Shared packages
-│   └── db/             # Database connections
+│   ├── db/             # Database connections
+│   └── logging/        # Logging utilities
 ├── shared/             # Shared utilities
 └── main.go             # Main application entry point
 ```
