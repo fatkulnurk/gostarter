@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/fatkulnurk/gostarter/config"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 // NewMySQL membuat koneksi MySQL baru berdasarkan konfigurasi

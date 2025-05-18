@@ -6,10 +6,10 @@ services:
     command: ["./main", "--svc=http"]
     ports:
       - "8080:8080"
+    volumes:
+      - ./.env:/root/.env
     environment:
       - environment=development
-      - REDIS_ADDR=redis:6379
-      - MYSQL_DSN=root:password@tcp(mysql:3306)/mydb
     depends_on:
       - redis
       - mysql
@@ -18,10 +18,10 @@ services:
   worker:
     build: .
     command: ["./main", "--svc=worker"]
+    volumes:
+      - ./.env:/root/.env
     environment:
       - environment=development
-      - REDIS_ADDR=redis:6379
-      - MYSQL_DSN=root:password@tcp(mysql:3306)/mydb
     depends_on:
       - redis
       - mysql
@@ -30,10 +30,10 @@ services:
   scheduler:
     build: .
     command: ["./main", "--svc=schedule"]
+    volumes:
+      - ./.env:/root/.env
     environment:
       - environment=development
-      - REDIS_ADDR=redis:6379
-      - MYSQL_DSN=root:password@tcp(mysql:3306)/mydb
     depends_on:
       - redis
       - mysql
