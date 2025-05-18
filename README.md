@@ -1,11 +1,12 @@
 # GoStarter
 
-A starter template for Go applications with support for HTTP services and background workers.
+A starter template for Go applications with support for HTTP services, background workers, and schedulers.
 
 ## Features
 
 - HTTP server using Fiber framework
 - Background worker using Asynq
+- Scheduled tasks with Asynq Scheduler
 - MySQL and Redis support
 - Docker and Docker Compose ready
 - Structured logging with Zap
@@ -43,6 +44,10 @@ docker-compose down
 3. Run the worker:
    ```bash
    go run main.go --svc=worker
+   ```
+4. Run the scheduler:
+   ```bash
+   go run main.go --svc=scheduler
    ```
 
 ## Project Structure
