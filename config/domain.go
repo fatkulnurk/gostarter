@@ -81,3 +81,12 @@ type SMTP struct {
 type SES struct {
 	Region string
 }
+
+type S3 struct {
+	Region    string
+	Bucket    string
+	AccessKey string
+	SecretKey string
+	Session   string
+	Endpoint  string
+}
