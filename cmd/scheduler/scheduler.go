@@ -37,13 +37,14 @@ func Serve(cfg *config.Config) {
 	}(cfg)
 
 	// delivery, only register what you need
-	delivery := func(cfg *config.Config) *pkg.Delivery {
+	delivery := func(cfg *config.Config, adapter *pkg.Adapter) *pkg.Delivery {
 		mux := asynq.NewServeMux()
+		scheduler := asynq.NewSchedulerFromRedisClient(adapter.Redis, nil)
 		return &pkg.Delivery{
-			HTTP: nil,
-			Task: mux,
+			Task:     mux,
+			Schedule: scheduler,
 		}
-	}(cfg)
+	}(cfg, adapter)
 
 	// Register modules
 	func() {
@@ -55,26 +56,12 @@ func Serve(cfg *config.Config) {
 			fmt.Printf("number: %d\n", idx+1)
 			fmt.Printf("Registering module: %s\n", module.GetInfo().Name)
 			fmt.Printf("Prefix: %s\n", module.GetInfo().Prefix)
-			module.RegisterTask()
+			module.RegisterSchedule()
 			fmt.Printf("-------------------------\n")
 		}
 	}()
 
-	server := asynq.NewServerFromRedisClient(adapter.Redis,
-		asynq.Config{
-			// Specify how many concurrent workers to use
-			Concurrency: cfg.Queue.Concurrency,
-			// Optionally specify multiple queues with different priority.
-			Queues: map[string]int{
-				"critical": 6,
-				"default":  3,
-				"low":      1,
-			},
-			// See the godoc for other configuration options
-		},
-	)
-
-	if err := server.Run(delivery.Task); err != nil {
-		log.Fatalf("could not run server: %v", err)
+	if err := delivery.Schedule.Run(); err != nil {
+		log.Fatal(err)
 	}
 }

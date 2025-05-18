@@ -45,7 +45,6 @@ func Serve(cfg *config.Config) {
 	delivery := func(cfg *config.Config) *pkg.Delivery {
 		return &pkg.Delivery{
 			HTTP: initHttp(cfg),
-			Task: nil,
 		}
 	}(cfg)
 
