@@ -2,11 +2,12 @@ package logging
 
 import (
 	"fmt"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 	"os"
 	"sync"
 	"time"
+
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 var (
@@ -51,31 +52,50 @@ func GetLogger() *zap.Logger {
 	}
 	return log
 }
-
 func Debug(msg string, fields ...zap.Field) {
 	GetLogger().Debug(msg, fields...)
+}
+
+func Debugf(format string, args ...interface{}) {
+	Debug(fmt.Sprintf(format, args...))
 }
 
 func Info(msg string, fields ...zap.Field) {
 	GetLogger().Info(msg, fields...)
 }
 
+func Infof(format string, args ...interface{}) {
+	Info(fmt.Sprintf(format, args...))
+}
+
 func Warn(msg string, fields ...zap.Field) {
 	GetLogger().Warn(msg, fields...)
+}
+
+func Warnf(format string, args ...interface{}) {
+	Warn(fmt.Sprintf(format, args...))
 }
 
 func Error(msg string, fields ...zap.Field) {
 	GetLogger().Error(msg, fields...)
 }
 
+func Errorf(format string, args ...interface{}) {
+	Error(fmt.Sprintf(format, args...))
+}
+
 func Fatal(msg string, fields ...zap.Field) {
 	GetLogger().Fatal(msg, fields...)
+}
+
+func Fatalf(format string, args ...interface{}) {
+	Fatal(fmt.Sprintf(format, args...))
 }
 
 func Panic(msg string, fields ...zap.Field) {
 	GetLogger().Panic(msg, fields...)
 }
 
-func Infof(format string, args ...interface{}) {
-	Info(fmt.Sprintf(format, args...))
+func Panicf(format string, args ...interface{}) {
+	Panic(fmt.Sprintf(format, args...))
 }
