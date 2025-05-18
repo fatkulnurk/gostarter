@@ -3,6 +3,11 @@ package http
 import (
 	"context"
 	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
+
 	"github.com/fatkulnurk/gostarter/config"
 	"github.com/fatkulnurk/gostarter/internal/example"
 	"github.com/fatkulnurk/gostarter/pkg"
@@ -10,10 +15,6 @@ import (
 	pkgqueue "github.com/fatkulnurk/gostarter/pkg/queue"
 	"github.com/gofiber/fiber/v2"
 	gofibermiddlewarerecover "github.com/gofiber/fiber/v2/middleware/recover"
-	"os"
-	"os/signal"
-	"syscall"
-	"time"
 )
 
 func Serve(cfg *config.Config) {
@@ -58,7 +59,7 @@ func Serve(cfg *config.Config) {
 			fmt.Printf("number: %d\n", idx+1)
 			fmt.Printf("Registering module: %s\n", module.GetInfo().Name)
 			fmt.Printf("Prefix: %s\n", module.GetInfo().Prefix)
-			module.RegisterTask()
+			module.RegisterHTTP()
 			fmt.Printf("-------------------------\n")
 		}
 	}()
