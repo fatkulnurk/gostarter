@@ -47,7 +47,7 @@ docker-compose down
    ```
 4. Run the scheduler:
    ```bash
-   go run main.go --svc=scheduler
+   go run main.go --svc=schedule
    ```
 
 ## Project Structure
