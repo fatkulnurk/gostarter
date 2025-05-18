@@ -71,8 +71,16 @@ func New(env string) *Config {
 		Queue: &Queue{
 			Concurrency: utils.GetIntEnv("QUEUE_WORKER_CONCURRENCY", 10),
 		},
-		Schedule: Schedule{
+		Schedule: &Schedule{
 			Timezone: utils.GetEnv("SCHEDULE_TIMEZONE", "UTC"),
+		},
+		SMTP: &SMTP{
+			Host:              utils.GetEnv("SMTP_HOST", "smtp.gmail.com"),
+			Port:              utils.GetIntEnv("SMTP_PORT", 587),
+			Username:          utils.GetEnv("SMTP_USER", ""),
+			Password:          utils.GetEnv("SMTP_PASSWORD", ""),
+			AuthType:          utils.GetEnv("SMTP_AUTH_TYPE", "PLAIN"),
+			WithTLSPortPolicy: utils.GetIntEnv("SMTP_WITH_TLS_PORT_POLICY", 0),
 		},
 	}
 
