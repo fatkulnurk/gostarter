@@ -1,8 +1,15 @@
 package utils
 
 import (
+	"errors"
+	"io"
+	"mime"
+	"mime/multipart"
+	"net/http"
+	"path/filepath"
 	"regexp"
 	"slices"
+	"strings"
 )
 
 var (
@@ -96,4 +103,127 @@ func ValidateAlphaNumeric(str string) bool {
 
 func OneOf(value string, options []string) bool {
 	return slices.Contains(options, value)
+}
+
+// ValidateFileSize securely checks if the file size is within allowed limits
+func ValidateFileSize(file *multipart.FileHeader, maxSize int64) bool {
+	return file != nil && file.Size > 0 && file.Size <= maxSize
+}
+
+// ValidateFileType securely checks file content type using both content sniffing and header validation
+func ValidateFileType(file *multipart.FileHeader, allowedTypes []string) bool {
+	if file == nil {
+		return false
+	}
+
+	// Validate using content sniffing
+	contentOk, err := validateContentType(file, allowedTypes)
+	if err == nil && contentOk {
+		return true
+	}
+
+	// Fallback to header validation
+	return validateHeaderType(file, allowedTypes)
+}
+
+// ValidateFileExtension checks for allowed file extensions (case-insensitive)
+func ValidateFileExtension(file *multipart.FileHeader, allowedExtensions []string) bool {
+	if file == nil {
+		return false
+	}
+
+	ext := strings.ToLower(strings.TrimPrefix(filepath.Ext(file.Filename), "."))
+	normalizedExtensions := make([]string, len(allowedExtensions))
+	for i, e := range allowedExtensions {
+		normalizedExtensions[i] = strings.ToLower(strings.TrimPrefix(e, "."))
+	}
+
+	return slices.Contains(normalizedExtensions, ext)
+}
+
+// ValidateFileName checks for secure filenames and prevents path traversal
+func ValidateFileName(file *multipart.FileHeader) bool {
+	if file == nil {
+		return false
+	}
+
+	cleaned := filepath.Clean(file.Filename)
+	base := filepath.Base(cleaned)
+
+	// Prevent empty filenames and directory traversal
+	if cleaned == "." || cleaned == ".." || base != cleaned {
+		return false
+	}
+
+	// Block special characters
+	forbidden := []string{"<", ">", ":", "\"", "/", "\\", "|", "?", "*"}
+	return !strings.ContainsAny(base, strings.Join(forbidden, ""))
+}
+
+// ValidateFileNameLength ensures filename length is within limits
+func ValidateFileNameLength(file *multipart.FileHeader, maxLength int) bool {
+	if file == nil {
+		return false
+	}
+	return len(file.Filename) <= maxLength
+}
+
+// Helper functions
+func validateContentType(file *multipart.FileHeader, allowedTypes []string) (bool, error) {
+	f, err := file.Open()
+	if err != nil {
+		return false, err
+	}
+	defer f.Close()
+
+	buffer := make([]byte, 512)
+	n, err := f.Read(buffer)
+	if err != nil && err != io.EOF {
+		return false, err
+	}
+
+	detectedType := http.DetectContentType(buffer[:n])
+	return slices.Contains(allowedTypes, detectedType), nil
+}
+
+func validateHeaderType(file *multipart.FileHeader, allowedTypes []string) bool {
+	contentType := file.Header.Get("Content-Type")
+	if contentType == "" {
+		return false
+	}
+
+	// Parse media type to handle parameters like charset
+	mimeType, _, err := mime.ParseMediaType(contentType)
+	if err != nil {
+		return false
+	}
+
+	return slices.Contains(allowedTypes, mimeType)
+}
+
+// Example validation chain
+func ValidateUploadedFile(file *multipart.FileHeader) error {
+	if !ValidateFileName(file) {
+		return errors.New("invalid filename")
+	}
+
+	if !ValidateFileNameLength(file, 255) {
+		return errors.New("filename too long")
+	}
+
+	if !ValidateFileSize(file, (10 * 1024 * 1024)) { // 10MB limit
+		return errors.New("file too large")
+	}
+
+	allowedTypes := []string{"image/jpeg", "image/png"}
+	if !ValidateFileType(file, allowedTypes) {
+		return errors.New("invalid file type")
+	}
+
+	allowedExts := []string{"jpg", "jpeg", "png"}
+	if !ValidateFileExtension(file, allowedExts) {
+		return errors.New("invalid file extension")
+	}
+
+	return nil
 }
