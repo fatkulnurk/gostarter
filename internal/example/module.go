@@ -2,6 +2,7 @@ package example
 
 import (
 	"fmt"
+	"github.com/hibiken/asynq"
 	"magicauth/internal/example/delivery"
 	"magicauth/internal/example/domain"
 	"magicauth/internal/example/repository"
@@ -26,6 +27,13 @@ func New(adapter *pkg.Adapter, delivery *pkg.Delivery) pkg.IModule {
 	}
 }
 
+func (m *Module) GetInfo() *pkg.Module {
+	return &pkg.Module{
+		Name:   "Module",
+		Prefix: "example",
+	}
+}
+
 func (m *Module) RegisterHTTP() {
 	if m.Delivery.HTTP == nil {
 		panic("router is nil")
@@ -42,18 +50,24 @@ func (m *Module) RegisterHTTP() {
 	api.Get("", deliveryHttp.HandleExampleApi)
 }
 
-func (m *Module) RegisterQueue() {
-	if m.Delivery.Worker == nil {
+func (m *Module) RegisterTask() {
+	if m.Delivery.Task == nil {
 		panic("queue is nil")
 	}
 
 	deliveryQueue := delivery.NewDeliveryQueue(m.Usecase)
-	m.Delivery.Worker.HandleFunc(m.GetInfo().Prefix+":send", deliveryQueue.SendMagicLink)
+	m.Delivery.Task.HandleFunc(m.GetInfo().Prefix+":send", deliveryQueue.HandleTaskExample)
 }
 
-func (m *Module) GetInfo() *pkg.Module {
-	return &pkg.Module{
-		Name:   "Module",
-		Prefix: "example",
+func (m *Module) RegisterSchedule() {
+	if m.Delivery.Schedule == nil {
+		panic("schedule is nil")
 	}
+
+	// register schedule
+	entryID, err := m.Delivery.Schedule.Register("@every 1m", asynq.NewTask(m.GetInfo().Prefix+":send", nil))
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Registered schedule:", entryID)
 }

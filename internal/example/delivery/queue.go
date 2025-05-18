@@ -2,6 +2,7 @@ package delivery
 
 import (
 	"context"
+	"fmt"
 	"magicauth/internal/example/domain"
 
 	"github.com/hibiken/asynq"
@@ -15,6 +16,7 @@ func NewDeliveryQueue(usecase domain.IUsecase) *QueueDelivery {
 	return &QueueDelivery{usecase: usecase}
 }
 
-func (d *QueueDelivery) SendMagicLink(ctx context.Context, task *asynq.Task) error {
+func (d QueueDelivery) HandleTaskExample(ctx context.Context, task *asynq.Task) error {
+	fmt.Printf("HandleTaskExample")
 	return nil
 }

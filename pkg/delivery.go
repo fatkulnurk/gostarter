@@ -6,6 +6,7 @@ import (
 )
 
 type Delivery struct {
-	HTTP   *fiber.App
-	Worker *asynq.ServeMux
+	HTTP     *fiber.App
+	Task     *asynq.ServeMux
+	Schedule *asynq.Scheduler
 }

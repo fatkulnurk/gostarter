@@ -44,8 +44,8 @@ func Serve(cfg *config.Config) {
 	// delivery, only register what you need
 	delivery := func(cfg *config.Config) *pkg.Delivery {
 		return &pkg.Delivery{
-			HTTP:   initHttp(cfg),
-			Worker: nil,
+			HTTP: initHttp(cfg),
+			Task: nil,
 		}
 	}(cfg)
 
@@ -59,7 +59,7 @@ func Serve(cfg *config.Config) {
 			fmt.Printf("number: %d\n", idx+1)
 			fmt.Printf("Registering module: %s\n", module.GetInfo().Name)
 			fmt.Printf("Prefix: %s\n", module.GetInfo().Prefix)
-			module.RegisterQueue()
+			module.RegisterTask()
 			fmt.Printf("-------------------------\n")
 		}
 	}()

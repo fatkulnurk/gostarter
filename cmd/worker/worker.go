@@ -23,8 +23,8 @@ func Serve(cfg *config.Config) {
 	delivery := func(cfg *config.Config) *pkg.Delivery {
 		mux := asynq.NewServeMux()
 		return &pkg.Delivery{
-			HTTP:   nil,
-			Worker: mux,
+			HTTP: nil,
+			Task: mux,
 		}
 	}(cfg)
 
@@ -38,7 +38,7 @@ func Serve(cfg *config.Config) {
 			fmt.Printf("number: %d\n", idx+1)
 			fmt.Printf("Registering module: %s\n", module.GetInfo().Name)
 			fmt.Printf("Prefix: %s\n", module.GetInfo().Prefix)
-			module.RegisterHTTP()
+			module.RegisterTask()
 			fmt.Printf("-------------------------\n")
 		}
 	}()
@@ -57,7 +57,7 @@ func Serve(cfg *config.Config) {
 		},
 	)
 
-	if err := server.Run(delivery.Worker); err != nil {
+	if err := server.Run(delivery.Task); err != nil {
 		log.Fatalf("could not run server: %v", err)
 	}
 }

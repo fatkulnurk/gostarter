@@ -1,9 +1,10 @@
 package pkg
 
 type IModule interface {
-	RegisterHTTP()
-	RegisterQueue()
 	GetInfo() *Module
+	RegisterHTTP()
+	RegisterTask()
+	RegisterSchedule()
 }
 
 type Module struct {
