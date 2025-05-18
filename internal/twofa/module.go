@@ -27,3 +27,10 @@ func (t TwoFA) RegisterQueue() {
 		panic("queue is nil")
 	}
 }
+
+func (t TwoFA) GetInfo() *pkg.Module {
+	return &pkg.Module{
+		Name:   "2FA",
+		Prefix: "2fa",
+	}
+}
