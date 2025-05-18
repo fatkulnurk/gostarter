@@ -8,6 +8,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/fatkulnurk/gostarter/shared/middleware"
+
 	"github.com/fatkulnurk/gostarter/config"
 	"github.com/fatkulnurk/gostarter/internal/example"
 	"github.com/fatkulnurk/gostarter/pkg"
@@ -97,10 +99,7 @@ func initHttp(cfg *config.Config) *fiber.App {
 		BodyLimit:     cfg.DeliveryHttp.BodyLimit,
 	})
 	app.Use(gofibermiddlewarerecover.New())
-	app.Use(func(c *fiber.Ctx) error {
-		fmt.Printf("[%s] %s - %s\n", c.Method(), c.Path(), c.IP())
-		return c.Next()
-	})
+	app.Use(middleware.LoggingMiddleware())
 	app.Get("/ping", func(c *fiber.Ctx) error {
 		return c.JSON("pong")
 	})
