@@ -2,6 +2,7 @@ package example
 
 import (
 	"fmt"
+
 	"github.com/fatkulnurk/gostarter/internal/example/delivery"
 	"github.com/fatkulnurk/gostarter/internal/example/domain"
 	"github.com/fatkulnurk/gostarter/internal/example/repository"
@@ -68,7 +69,7 @@ func (m *Module) RegisterSchedule() {
 	}
 
 	// register schedule
-	entryID, err := m.Delivery.Schedule.Register("* * * * *", asynq.NewTask(m.GetInfo().Prefix+":schedule::example", nil))
+	entryID, err := m.Delivery.Schedule.Register("*/1 * * * *", asynq.NewTask(m.GetInfo().Prefix+":schedule::example", nil))
 	if err != nil {
 		panic(err)
 	}
