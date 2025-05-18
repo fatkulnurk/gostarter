@@ -3,9 +3,9 @@ package cmd
 import (
 	"flag"
 	"fmt"
-	"magicauth/cmd/http"
-	"magicauth/cmd/worker"
-	"magicauth/config"
+	"github.com/fatkulnurk/gostarter/cmd/http"
+	"github.com/fatkulnurk/gostarter/cmd/worker"
+	"github.com/fatkulnurk/gostarter/config"
 	"os"
 )
 

@@ -1,8 +1,8 @@
 package config
 
 import (
+	"github.com/fatkulnurk/gostarter/shared/constant"
 	"github.com/joho/godotenv"
-	"magicauth/shared/constant"
 	"os"
 )
 

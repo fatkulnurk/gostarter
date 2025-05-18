@@ -1,6 +1,6 @@
 package usecase
 
-import "magicauth/internal/example/domain"
+import "github.com/fatkulnurk/gostarter/internal/example/domain"
 
 type UseCase struct {
 	repo domain.IRepository

@@ -3,7 +3,7 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"magicauth/config"
+	"github.com/fatkulnurk/gostarter/config"
 )
 
 // NewMySQL membuat koneksi MySQL baru berdasarkan konfigurasi

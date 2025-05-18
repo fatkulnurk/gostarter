@@ -2,7 +2,7 @@ package repository
 
 import (
 	"database/sql"
-	"magicauth/internal/example/domain"
+	"github.com/fatkulnurk/gostarter/internal/example/domain"
 )
 
 type Repository struct {

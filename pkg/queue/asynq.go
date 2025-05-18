@@ -1,9 +1,9 @@
 package queue
 
 import (
+	"github.com/fatkulnurk/gostarter/config"
 	"github.com/hibiken/asynq"
 	"github.com/redis/go-redis/v9"
-	"magicauth/config"
 )
 
 func NewAsynqClient(cfg *config.Queue, redis *redis.Client) (*asynq.Client, error) {

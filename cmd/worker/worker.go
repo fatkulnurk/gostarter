@@ -2,13 +2,13 @@ package worker
 
 import (
 	"fmt"
+	"github.com/fatkulnurk/gostarter/config"
+	"github.com/fatkulnurk/gostarter/internal/example"
+	"github.com/fatkulnurk/gostarter/pkg"
+	"github.com/fatkulnurk/gostarter/pkg/db"
+	pkgqueue "github.com/fatkulnurk/gostarter/pkg/queue"
 	"github.com/hibiken/asynq"
 	"log"
-	"magicauth/config"
-	"magicauth/internal/example"
-	"magicauth/pkg"
-	"magicauth/pkg/db"
-	pkgqueue "magicauth/pkg/queue"
 )
 
 func Serve(cfg *config.Config) {

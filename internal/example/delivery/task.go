@@ -3,7 +3,7 @@ package delivery
 import (
 	"context"
 	"fmt"
-	"magicauth/internal/example/domain"
+	"github.com/fatkulnurk/gostarter/internal/example/domain"
 
 	"github.com/hibiken/asynq"
 )

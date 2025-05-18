@@ -3,7 +3,7 @@ package db
 import (
 	"context"
 	"fmt"
-	"magicauth/config"
+	"github.com/fatkulnurk/gostarter/config"
 	"time"
 
 	"github.com/redis/go-redis/v9"

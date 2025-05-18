@@ -2,12 +2,12 @@ package example
 
 import (
 	"fmt"
+	"github.com/fatkulnurk/gostarter/internal/example/delivery"
+	"github.com/fatkulnurk/gostarter/internal/example/domain"
+	"github.com/fatkulnurk/gostarter/internal/example/repository"
+	"github.com/fatkulnurk/gostarter/internal/example/usecase"
+	"github.com/fatkulnurk/gostarter/pkg"
 	"github.com/hibiken/asynq"
-	"magicauth/internal/example/delivery"
-	"magicauth/internal/example/domain"
-	"magicauth/internal/example/repository"
-	"magicauth/internal/example/usecase"
-	"magicauth/pkg"
 )
 
 type Module struct {

@@ -3,8 +3,8 @@ package delivery
 import (
 	"context"
 	"fmt"
+	"github.com/fatkulnurk/gostarter/internal/example/domain"
 	"github.com/hibiken/asynq"
-	"magicauth/internal/example/domain"
 )
 
 type ScheduleDelivery struct {
