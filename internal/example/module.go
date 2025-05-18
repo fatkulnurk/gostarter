@@ -9,7 +9,7 @@ import (
 	"magicauth/pkg"
 )
 
-type MagicLink struct {
+type Module struct {
 	Adapter  *pkg.Adapter
 	Delivery *pkg.Delivery
 	Usecase  *domain.IUsecase
@@ -19,14 +19,14 @@ func New(adapter *pkg.Adapter, delivery *pkg.Delivery) pkg.IModule {
 	repo := repository.NewRepository(adapter.DB)
 	svc := usecase.NewUseCase(repo)
 
-	return &MagicLink{
+	return &Module{
 		Adapter:  adapter,
 		Delivery: delivery,
 		Usecase:  &svc,
 	}
 }
 
-func (m *MagicLink) RegisterHTTP() {
+func (m *Module) RegisterHTTP() {
 	if m.Delivery.HTTP == nil {
 		panic("router is nil")
 	}
@@ -42,7 +42,7 @@ func (m *MagicLink) RegisterHTTP() {
 	api.Get("", deliveryHttp.HandleExampleApi)
 }
 
-func (m *MagicLink) RegisterQueue() {
+func (m *Module) RegisterQueue() {
 	if m.Delivery.Worker == nil {
 		panic("queue is nil")
 	}
@@ -51,9 +51,9 @@ func (m *MagicLink) RegisterQueue() {
 	m.Delivery.Worker.HandleFunc(m.GetInfo().Prefix+":send", deliveryQueue.SendMagicLink)
 }
 
-func (m *MagicLink) GetInfo() *pkg.Module {
+func (m *Module) GetInfo() *pkg.Module {
 	return &pkg.Module{
-		Name:   "Example",
+		Name:   "Module",
 		Prefix: "example",
 	}
 }
