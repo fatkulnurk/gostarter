@@ -1,7 +1,7 @@
 package delivery
 
 import (
-	"magicauth/internal/magiclink/domain"
+	"magicauth/internal/example/domain"
 
 	"github.com/gofiber/fiber/v2"
 )

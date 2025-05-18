@@ -2,7 +2,7 @@ package repository
 
 import (
 	"database/sql"
-	"magicauth/internal/magiclink/domain"
+	"magicauth/internal/example/domain"
 )
 
 type Repository struct {

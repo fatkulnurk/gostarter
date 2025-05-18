@@ -1,11 +1,11 @@
-package magiclink
+package example
 
 import (
 	"fmt"
-	"magicauth/internal/magiclink/delivery"
-	"magicauth/internal/magiclink/domain"
-	"magicauth/internal/magiclink/repository"
-	"magicauth/internal/magiclink/usecase"
+	"magicauth/internal/example/delivery"
+	"magicauth/internal/example/domain"
+	"magicauth/internal/example/repository"
+	"magicauth/internal/example/usecase"
 	"magicauth/pkg"
 )
 
@@ -48,7 +48,7 @@ func (m *MagicLink) RegisterQueue() {
 
 func (m *MagicLink) GetInfo() *pkg.Module {
 	return &pkg.Module{
-		Name:   "MagicLink",
-		Prefix: "magic-link",
+		Name:   "Example",
+		Prefix: "example",
 	}
 }

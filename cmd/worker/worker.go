@@ -5,8 +5,7 @@ import (
 	"github.com/hibiken/asynq"
 	"log"
 	"magicauth/config"
-	"magicauth/internal/magiclink"
-	"magicauth/internal/twofa"
+	"magicauth/internal/example"
 	"magicauth/pkg"
 )
 
@@ -32,8 +31,7 @@ func Serve(cfg *config.Config) {
 	// Register modules
 	func() {
 		var modules []pkg.IModule
-		modules = append(modules, twofa.New(adapter, delivery))
-		modules = append(modules, magiclink.New(adapter, delivery))
+		modules = append(modules, example.New(adapter, delivery))
 
 		fmt.Printf("-------Register module------\n")
 		for idx, module := range modules {

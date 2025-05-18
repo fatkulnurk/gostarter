@@ -2,7 +2,7 @@ package delivery
 
 import (
 	"context"
-	"magicauth/internal/magiclink/domain"
+	"magicauth/internal/example/domain"
 
 	"github.com/hibiken/asynq"
 )

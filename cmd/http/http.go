@@ -6,8 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	gofibermiddlewarerecover "github.com/gofiber/fiber/v2/middleware/recover"
 	"magicauth/config"
-	"magicauth/internal/magiclink"
-	"magicauth/internal/twofa"
+	"magicauth/internal/example"
 	"magicauth/pkg"
 	"magicauth/pkg/db"
 	pkgqueue "magicauth/pkg/queue"
@@ -53,8 +52,7 @@ func Serve(cfg *config.Config) {
 	// Register modules
 	func() {
 		var modules []pkg.IModule
-		modules = append(modules, twofa.New(adapter, delivery))
-		modules = append(modules, magiclink.New(adapter, delivery))
+		modules = append(modules, example.New(adapter, delivery))
 
 		fmt.Printf("-------Register module------\n")
 		for idx, module := range modules {
