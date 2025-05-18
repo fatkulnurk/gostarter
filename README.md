@@ -8,6 +8,9 @@ A starter template for Go applications with support for HTTP services, backgroun
 - Background worker using Asynq
 - Scheduled tasks with Asynq Scheduler
 - MySQL and Redis support
+- S3 compatible storage
+- AWS SES for email delivery
+- SMTP for email delivery
 - Docker and Docker Compose ready
 - Structured logging with Zap
 
@@ -53,21 +56,83 @@ docker-compose down
 ## Project Structure
 
 ```
-├── cmd/                # Application entry points
-│   ├── http/           # HTTP server
-│   └── worker/         # Background worker
-├── config/             # Configuration
-├── internal/           # Application code
-│   └── example/        # Example module
-│       ├── delivery/   # HTTP handlers, tasks, schedules
-│       ├── domain/     # Domain models and interfaces
-│       ├── repository/ # Data access layer
-│       └── usecase/    # Business logic
-├── pkg/                # Shared packages
-│   ├── db/             # Database connections
-│   └── logging/        # Logging utilities
-├── shared/             # Shared utilities
-└── main.go             # Main application entry point
+├── Dockerfile
+├── README.md
+├── cmd
+│   ├── cmd.go
+│   ├── http
+│   │   └── http.go
+│   ├── scheduler
+│   │   └── scheduler.go
+│   └── worker
+│       └── worker.go
+├── config
+│   ├── config.go
+│   └── domain.go
+├── docker-compose.yaml
+├── go.mod
+├── go.sum
+├── internal
+│   ├── example
+│   │   ├── delivery
+│   │   │   ├── http.go
+│   │   │   ├── schedule.go
+│   │   │   └── task.go
+│   │   ├── domain
+│   │   │   └── domain.go
+│   │   ├── module.go
+│   │   ├── repository
+│   │   │   └── repository.go
+│   │   └── usecase
+│   │       └── usecase.go
+│   └── helloworld
+│       ├── delivery
+│       │   ├── http.go
+│       │   ├── schedule.go
+│       │   └── task.go
+│       ├── domain
+│       │   └── domain.go
+│       ├── module.go
+│       ├── repository
+│       │   └── repository.go
+│       ├── templates
+│       │   ├── mail
+│       │   │   └── example.html
+│       │   └── web
+│       └── usecase
+│           └── usecase.go
+├── main.go
+├── pkg
+│   ├── adapter.go
+│   ├── cache
+│   │   └── redis.go
+│   ├── db
+│   │   ├── mysql.go
+│   │   └── redis.go
+│   ├── delivery.go
+│   ├── interfaces
+│   │   ├── cache.go
+│   │   ├── mailer.go
+│   │   ├── module.go
+│   │   ├── queue.go
+│   │   └── storage.go
+│   ├── logging
+│   │   └── logger.go
+│   ├── mailer
+│   │   ├── ses.go
+│   │   └── smtp.go
+│   ├── queue
+│   │   └── asynq.go
+│   ├── storage
+│   │   └── s3.go
+│   └── utils
+│       ├── env.go
+│       └── validation.go
+└── shared
+    ├── constant
+    │   └── env.go
+    └── middleware
+        └── logging.go
 ```
 
 ## License
