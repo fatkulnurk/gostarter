@@ -2,6 +2,7 @@ package mailer
 
 import (
 	"github.com/fatkulnurk/gostarter/config"
+	"github.com/fatkulnurk/gostarter/pkg/interfaces"
 	"github.com/fatkulnurk/gostarter/pkg/logging"
 	"github.com/wneessen/go-mail"
 )
@@ -22,4 +23,13 @@ func NewSmtp(cfg *config.SMTP) (*mail.Client, error) {
 	}
 
 	return client, nil
+}
+
+type SMTPMailer struct {
+	client *mail.Client
+	from   string
+}
+
+func NewSMTPMailer(client *mail.Client, from string) interfaces.IMailer {
+	return interfaces.NewSESMailer(client, from)
 }
