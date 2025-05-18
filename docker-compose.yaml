@@ -1,0 +1,60 @@
+version: "3.8"
+
+services:
+  http:
+    build: .
+    command: ["./main", "--svc=http"]
+    ports:
+      - "8080:8080"
+    environment:
+      - environment=development
+      - REDIS_ADDR=redis:6379
+      - MYSQL_DSN=root:password@tcp(mysql:3306)/mydb
+    depends_on:
+      - redis
+      - mysql
+    restart: unless-stopped
+
+  worker:
+    build: .
+    command: ["./main", "--svc=worker"]
+    environment:
+      - environment=development
+      - REDIS_ADDR=redis:6379
+      - MYSQL_DSN=root:password@tcp(mysql:3306)/mydb
+    depends_on:
+      - redis
+      - mysql
+    restart: unless-stopped
+
+  scheduler:
+    build: .
+    command: ["./main", "--svc=schedule"]
+    environment:
+      - environment=development
+      - REDIS_ADDR=redis:6379
+      - MYSQL_DSN=root:password@tcp(mysql:3306)/mydb
+    depends_on:
+      - redis
+      - mysql
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: mydb
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  mysql-data:
