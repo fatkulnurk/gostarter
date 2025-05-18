@@ -32,9 +32,14 @@ func (m *MagicLink) RegisterHTTP() {
 	}
 
 	deliveryHttp := delivery.NewDeliveryHttp(m.Usecase)
+
+	// app
+	app := m.Delivery.HTTP.Group(fmt.Sprintf("/%s", m.GetInfo().Prefix))
+	app.Get("", deliveryHttp.HandleHelloWorld)
+
+	// api
 	api := m.Delivery.HTTP.Group(fmt.Sprintf("/api/v1/%s", m.GetInfo().Prefix))
-	api.Post("/create", deliveryHttp.HandleCreateMagicLink)
-	api.Get("/verify", deliveryHttp.HandleVerifyMagicLink)
+	api.Get("", deliveryHttp.HandleExampleApi)
 }
 
 func (m *MagicLink) RegisterQueue() {
