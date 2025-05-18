@@ -26,6 +26,7 @@ func New(env string) *Config {
 	if err := godotenv.Load(envFile); err != nil {
 		panic(err)
 	}
+
 	cfg := Config{
 		App: &App{
 			Environment: env,
