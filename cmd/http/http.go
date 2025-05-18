@@ -101,9 +101,6 @@ func initHttp(cfg *config.Config) *fiber.App {
 		fmt.Printf("[%s] %s - %s\n", c.Method(), c.Path(), c.IP())
 		return c.Next()
 	})
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.JSON("API is running")
-	})
 	app.Get("/ping", func(c *fiber.Ctx) error {
 		return c.JSON("pong")
 	})
