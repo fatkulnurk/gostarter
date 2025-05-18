@@ -77,7 +77,7 @@ func New(env string) *Config {
 		SMTP: &SMTP{
 			Host:              utils.GetEnv("SMTP_HOST", "smtp.gmail.com"),
 			Port:              utils.GetIntEnv("SMTP_PORT", 587),
-			Username:          utils.GetEnv("SMTP_USER", ""),
+			Username:          utils.GetEnv("SMTP_USERNAME", ""),
 			Password:          utils.GetEnv("SMTP_PASSWORD", ""),
 			AuthType:          utils.GetEnv("SMTP_AUTH_TYPE", "PLAIN"),
 			WithTLSPortPolicy: utils.GetIntEnv("SMTP_WITH_TLS_PORT_POLICY", 0),
