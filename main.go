@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
-	"magicauth/cmd"
-	"magicauth/config"
+	"github.com/fatkulnurk/gostarter/cmd"
+	"github.com/fatkulnurk/gostarter/config"
 	"os"
 )
 
