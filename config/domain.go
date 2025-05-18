@@ -7,7 +7,6 @@ import (
 type Config struct {
 	App           *App
 	Database      *Database
-	SMTP          *SMTP
 	DeliveryHttp  *DeliveryHttp
 	DeliveryQueue *DeliveryQueue
 	Redis         *Redis
@@ -20,11 +19,6 @@ type App struct {
 	Name        string
 	Environment string
 	Version     string
-	Mail        *Mail
-}
-
-type Mail struct {
-	From string
 }
 
 type DeliveryHttp struct {
@@ -50,14 +44,6 @@ type Database struct {
 	MaxIdleConns    int
 	ConnMaxLifetime time.Duration
 	ConnMaxIdleTime time.Duration
-}
-
-type SMTP struct {
-	Host     string
-	Port     int
-	User     string
-	Password string
-	From     string
 }
 
 type Redis struct {
