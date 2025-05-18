@@ -1,26 +1,42 @@
 package queue
 
 import (
+	"context"
+	"encoding/json"
 	"github.com/fatkulnurk/gostarter/config"
+	"github.com/fatkulnurk/gostarter/pkg/interfaces"
+	"github.com/fatkulnurk/gostarter/pkg/logging"
 	"github.com/hibiken/asynq"
 	"github.com/redis/go-redis/v9"
-	"log"
 )
 
 func NewAsynqClient(cfg *config.Queue, redis *redis.Client) (*asynq.Client, error) {
 	client := asynq.NewClientFromRedisClient(redis)
-	//defer func(client *asynq.Client) {
-	//	err := client.Close()
-	//	if err != nil {
-	//		panic(err)
-	//	}
-	//}(client)
 
 	err := client.Ping()
 	if err != nil {
-		log.Fatal("failed to ping redis: ", err)
+		logging.Fatalf("failed to ping redis: %v", err)
 		return nil, err
 	}
 
 	return client, nil
+}
+
+type AsynqQueue struct {
+	client *asynq.Client
+}
+
+func NewAsynqQueue(client *asynq.Client) interfaces.IQueue {
+	return &AsynqQueue{client: client}
+}
+
+func (q *AsynqQueue) Enqueue(ctx context.Context, taskName string, payload any, opts ...any) error {
+	data, err := json.Marshal(payload)
+	if err != nil {
+		return err
+	}
+
+	task := asynq.NewTask(taskName, data)
+	_, err = q.client.EnqueueContext(ctx, task)
+	return err
 }
