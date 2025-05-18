@@ -14,6 +14,8 @@ services:
       - redis
       - mysql
     restart: unless-stopped
+    networks:
+      - app-network
 
   worker:
     build: .
@@ -26,6 +28,8 @@ services:
       - redis
       - mysql
     restart: unless-stopped
+    networks:
+      - app-network
 
   scheduler:
     build: .
@@ -38,12 +42,16 @@ services:
       - redis
       - mysql
     restart: unless-stopped
+    networks:
+      - app-network
 
   redis:
     image: redis:7-alpine
     ports:
       - "6379:6379"
     restart: unless-stopped
+    networks:
+      - app-network
 
   mysql:
     image: mysql:8.0
@@ -55,6 +63,12 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     restart: unless-stopped
+    networks:
+      - app-network
 
 volumes:
   mysql-data:
+
+networks:
+  app-network:
+    driver: bridge
