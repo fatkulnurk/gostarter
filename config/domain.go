@@ -1,7 +1,6 @@
 package config
 
 import (
-	"github.com/robfig/cron/v3"
 	"time"
 )
 
@@ -13,7 +12,7 @@ type Config struct {
 	DeliveryQueue *DeliveryQueue
 	Redis         *Redis
 	Queue         *Queue
-	cron.Schedule
+	Schedule      Schedule
 }
 
 // App only this struct can deliver to module
@@ -77,4 +76,8 @@ type Redis struct {
 
 type Queue struct {
 	Concurrency int
+}
+
+type Schedule struct {
+	Timezone string
 }

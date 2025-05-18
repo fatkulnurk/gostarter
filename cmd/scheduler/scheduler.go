@@ -9,6 +9,7 @@ import (
 	pkgqueue "github.com/fatkulnurk/gostarter/pkg/queue"
 	"github.com/hibiken/asynq"
 	"log"
+	"time"
 )
 
 func Serve(cfg *config.Config) {
@@ -38,8 +39,15 @@ func Serve(cfg *config.Config) {
 
 	// delivery, only register what you need
 	delivery := func(cfg *config.Config, adapter *pkg.Adapter) *pkg.Delivery {
+		timeLocation, err := time.LoadLocation(cfg.Schedule.Timezone)
+		if err != nil {
+			panic(err)
+		}
+
 		mux := asynq.NewServeMux()
-		scheduler := asynq.NewSchedulerFromRedisClient(adapter.Redis, nil)
+		scheduler := asynq.NewSchedulerFromRedisClient(adapter.Redis, &asynq.SchedulerOpts{
+			Location: timeLocation,
+		})
 		return &pkg.Delivery{
 			Task:     mux,
 			Schedule: scheduler,
