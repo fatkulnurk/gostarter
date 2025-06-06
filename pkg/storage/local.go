@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"mime"
+	"net/http"
 	"os"
 	"path/filepath"
 	"sort"
@@ -185,12 +186,25 @@ func (s *LocalStorage) File(ctx context.Context, path string, expiryTempUrl *tim
 		return nil, fmt.Errorf("failed to get file info: %w", err)
 	}
 
-	// Determine mime type
+	// Determine mime type with proper validation
 	mimeType := "application/octet-stream"
 	ext := filepath.Ext(path)
 	if ext != "" {
-		if mType := mime.TypeByExtension(ext); mType != "" {
+		// Normalize extension to lowercase for consistent lookup
+		normalizedExt := strings.ToLower(ext)
+		if mType := mime.TypeByExtension(normalizedExt); mType != "" {
 			mimeType = mType
+		} else {
+			// Fallback to content detection for unknown extensions
+			content, err := os.ReadFile(filePath)
+			if err == nil && len(content) > 0 {
+				// Only read first 512 bytes for MIME detection
+				headerBytes := content
+				if len(content) > 512 {
+					headerBytes = content[:512]
+				}
+				mimeType = http.DetectContentType(headerBytes)
+			}
 		}
 	}
 
