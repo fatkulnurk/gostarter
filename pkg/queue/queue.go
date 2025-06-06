@@ -1,4 +1,4 @@
-package interfaces
+package queue
 
 import "context"
 
