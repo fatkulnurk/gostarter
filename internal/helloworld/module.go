@@ -2,8 +2,6 @@ package example
 
 import (
 	"fmt"
-	"github.com/fatkulnurk/gostarter/pkg/interfaces"
-
 	"github.com/fatkulnurk/gostarter/internal/helloworld/delivery"
 	"github.com/fatkulnurk/gostarter/internal/helloworld/domain"
 	"github.com/fatkulnurk/gostarter/internal/helloworld/repository"
@@ -18,7 +16,7 @@ type Module struct {
 	Usecase  *domain.IUsecase
 }
 
-func New(adapter *pkg.Adapter, delivery *pkg.Delivery) interfaces.IModule {
+func New(adapter *pkg.Adapter, delivery *pkg.Delivery) pkg.IModule {
 	repo := repository.NewRepository(adapter.DB)
 	svc := usecase.NewUseCase(repo)
 
@@ -29,8 +27,8 @@ func New(adapter *pkg.Adapter, delivery *pkg.Delivery) interfaces.IModule {
 	}
 }
 
-func (m *Module) GetInfo() *interfaces.Module {
-	return &interfaces.Module{
+func (m *Module) GetInfo() *pkg.Module {
+	return &pkg.Module{
 		Name:   "HelloWorld",
 		Prefix: "hello-world",
 	}
