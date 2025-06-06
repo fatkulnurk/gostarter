@@ -1,6 +1,7 @@
 package config
 
 import (
+	"os"
 	"time"
 )
 
@@ -83,10 +84,18 @@ type SES struct {
 }
 
 type S3 struct {
-	Region    string
-	Bucket    string
-	AccessKey string
-	SecretKey string
-	Session   string
-	Endpoint  string
+	Region               string
+	Bucket               string
+	AccessKey            string
+	SecretKey            string
+	Session              string
+	Url                  string // url for generate url
+	UseStylePathEndpoint bool   // if true, format will be s3.amazonaws.com/bucket, if false, format will be bucket.s3.amazonaws.com
+}
+
+type LocalStorage struct {
+	BasePath              string
+	BaseURL               string
+	DefaultDirPermission  os.FileMode // default 0755
+	DefaultFilePermission os.FileMode // default 0644
 }

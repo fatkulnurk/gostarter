@@ -12,40 +12,39 @@ import (
 	"strings"
 	"time"
 
+	"github.com/fatkulnurk/gostarter/config"
 	"github.com/fatkulnurk/gostarter/pkg/utils"
 )
 
 type LocalStorage struct {
-	BasePath string
-	BaseURL  string
+	cfg config.LocalStorage
 }
 
 // NewLocalStorage creates a new local storage instance
-func NewLocalStorage(basePath, baseURL string) (*LocalStorage, error) {
+func NewLocalStorage(cfg config.LocalStorage) (*LocalStorage, error) {
 	// Ensure the base path exists
-	if err := os.MkdirAll(basePath, 0755); err != nil {
+	if err := os.MkdirAll(cfg.BasePath, cfg.DefaultDirPermission); err != nil {
 		return nil, fmt.Errorf("failed to create base directory: %w", err)
 	}
 
 	// Ensure baseURL ends with a slash
-	if baseURL != "" && !strings.HasSuffix(baseURL, "/") {
-		baseURL += "/"
+	if cfg.BaseURL != "" && !strings.HasSuffix(cfg.BaseURL, "/") {
+		cfg.BaseURL += "/"
 	}
 
 	return &LocalStorage{
-		BasePath: basePath,
-		BaseURL:  baseURL,
+		cfg: cfg,
 	}, nil
 }
 
 // Upload saves a file to the local storage
 func (s *LocalStorage) Upload(ctx context.Context, input UploadInput) (*UploadOutput, error) {
 	// Create full path
-	filePath := filepath.Join(s.BasePath, input.FileName)
+	filePath := filepath.Join(s.cfg.BasePath, input.FileName)
 
 	// Ensure directory exists
 	dir := filepath.Dir(filePath)
-	if err := os.MkdirAll(dir, 0755); err != nil {
+	if err := os.MkdirAll(dir, s.cfg.DefaultDirPermission); err != nil {
 		return nil, fmt.Errorf("failed to create directory: %w", err)
 	}
 
@@ -72,7 +71,7 @@ func (s *LocalStorage) Upload(ctx context.Context, input UploadInput) (*UploadOu
 	}
 
 	// Write file
-	if err := os.WriteFile(filePath, content, 0644); err != nil {
+	if err := os.WriteFile(filePath, content, s.cfg.DefaultFilePermission); err != nil {
 		return nil, fmt.Errorf("failed to write file: %w", err)
 	}
 
@@ -86,7 +85,7 @@ func (s *LocalStorage) Upload(ctx context.Context, input UploadInput) (*UploadOu
 
 // Delete removes a file from the local storage
 func (s *LocalStorage) Delete(ctx context.Context, path string) error {
-	filePath := filepath.Join(s.BasePath, path)
+	filePath := filepath.Join(s.cfg.BasePath, path)
 
 	// Check if file exists
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
@@ -103,8 +102,8 @@ func (s *LocalStorage) Delete(ctx context.Context, path string) error {
 
 // Copy copies a file within the local storage
 func (s *LocalStorage) Copy(ctx context.Context, sourcePath, destinationPath string) error {
-	srcPath := filepath.Join(s.BasePath, sourcePath)
-	dstPath := filepath.Join(s.BasePath, destinationPath)
+	srcPath := filepath.Join(s.cfg.BasePath, sourcePath)
+	dstPath := filepath.Join(s.cfg.BasePath, destinationPath)
 
 	// Check if source file exists
 	if _, err := os.Stat(srcPath); os.IsNotExist(err) {
@@ -113,7 +112,7 @@ func (s *LocalStorage) Copy(ctx context.Context, sourcePath, destinationPath str
 
 	// Ensure destination directory exists
 	dstDir := filepath.Dir(dstPath)
-	if err := os.MkdirAll(dstDir, 0755); err != nil {
+	if err := os.MkdirAll(dstDir, s.cfg.DefaultDirPermission); err != nil {
 		return fmt.Errorf("failed to create destination directory: %w", err)
 	}
 
@@ -124,7 +123,7 @@ func (s *LocalStorage) Copy(ctx context.Context, sourcePath, destinationPath str
 	}
 
 	// Write to destination file
-	if err := os.WriteFile(dstPath, content, 0644); err != nil {
+	if err := os.WriteFile(dstPath, content, s.cfg.DefaultFilePermission); err != nil {
 		return fmt.Errorf("failed to write destination file: %w", err)
 	}
 
@@ -133,8 +132,8 @@ func (s *LocalStorage) Copy(ctx context.Context, sourcePath, destinationPath str
 
 // Move moves a file within the local storage
 func (s *LocalStorage) Move(ctx context.Context, sourcePath, destinationPath string) error {
-	srcPath := filepath.Join(s.BasePath, sourcePath)
-	dstPath := filepath.Join(s.BasePath, destinationPath)
+	srcPath := filepath.Join(s.cfg.BasePath, sourcePath)
+	dstPath := filepath.Join(s.cfg.BasePath, destinationPath)
 
 	// Check if source file exists
 	if _, err := os.Stat(srcPath); os.IsNotExist(err) {
@@ -143,7 +142,7 @@ func (s *LocalStorage) Move(ctx context.Context, sourcePath, destinationPath str
 
 	// Ensure destination directory exists
 	dstDir := filepath.Dir(dstPath)
-	if err := os.MkdirAll(dstDir, 0755); err != nil {
+	if err := os.MkdirAll(dstDir, s.cfg.DefaultDirPermission); err != nil {
 		return fmt.Errorf("failed to create destination directory: %w", err)
 	}
 
@@ -157,7 +156,7 @@ func (s *LocalStorage) Move(ctx context.Context, sourcePath, destinationPath str
 
 // Get retrieves a file's content from the local storage
 func (s *LocalStorage) Get(ctx context.Context, path string) ([]byte, error) {
-	filePath := filepath.Join(s.BasePath, path)
+	filePath := filepath.Join(s.cfg.BasePath, path)
 
 	// Check if file exists
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
@@ -175,7 +174,7 @@ func (s *LocalStorage) Get(ctx context.Context, path string) ([]byte, error) {
 
 // File gets information about a single file
 func (s *LocalStorage) File(ctx context.Context, path string, expiryTempUrl *time.Duration) (*FileStorage, error) {
-	filePath := filepath.Join(s.BasePath, path)
+	filePath := filepath.Join(s.cfg.BasePath, path)
 
 	// Get file info
 	fileInfo, err := os.Stat(filePath)
@@ -198,8 +197,8 @@ func (s *LocalStorage) File(ctx context.Context, path string, expiryTempUrl *tim
 	// Create URL
 	url := ""
 	tempUrl := ""
-	if s.BaseURL != "" {
-		url = s.BaseURL + path
+	if s.cfg.BaseURL != "" {
+		url = s.cfg.BaseURL + path
 		tempUrl = url // For local storage, temp URL is the same as the regular URL
 	}
 
@@ -218,7 +217,7 @@ func (s *LocalStorage) File(ctx context.Context, path string, expiryTempUrl *tim
 
 // Files lists files in a directory
 func (s *LocalStorage) Files(ctx context.Context, dir string, expiryTempUrl *time.Duration) ([]FileStorage, error) {
-	dirPath := filepath.Join(s.BasePath, dir)
+	dirPath := filepath.Join(s.cfg.BasePath, dir)
 
 	// Check if directory exists
 	if _, err := os.Stat(dirPath); os.IsNotExist(err) {
@@ -256,7 +255,7 @@ func (s *LocalStorage) Files(ctx context.Context, dir string, expiryTempUrl *tim
 
 // Directories lists subdirectories in a directory
 func (s *LocalStorage) Directories(ctx context.Context, dir string) ([]string, error) {
-	dirPath := filepath.Join(s.BasePath, dir)
+	dirPath := filepath.Join(s.cfg.BasePath, dir)
 
 	// Check if directory exists
 	if _, err := os.Stat(dirPath); os.IsNotExist(err) {
@@ -287,7 +286,7 @@ func (s *LocalStorage) Directories(ctx context.Context, dir string) ([]string, e
 
 // Exists checks if a file exists
 func (s *LocalStorage) Exists(ctx context.Context, path string) (bool, error) {
-	filePath := filepath.Join(s.BasePath, path)
+	filePath := filepath.Join(s.cfg.BasePath, path)
 
 	_, err := os.Stat(filePath)
 	if err == nil {
