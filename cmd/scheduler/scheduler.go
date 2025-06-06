@@ -6,7 +6,6 @@ import (
 	"github.com/fatkulnurk/gostarter/internal/example"
 	"github.com/fatkulnurk/gostarter/pkg"
 	"github.com/fatkulnurk/gostarter/pkg/db"
-	"github.com/fatkulnurk/gostarter/pkg/interfaces"
 	pkgqueue "github.com/fatkulnurk/gostarter/pkg/queue"
 	"github.com/hibiken/asynq"
 	"log"
@@ -57,7 +56,7 @@ func Serve(cfg *config.Config) {
 
 	// Register modules
 	func() {
-		var modules []interfaces.IModule
+		var modules []pkg.IModule
 		modules = append(modules, example.New(adapter, delivery))
 
 		fmt.Printf("-------Register module------\n")

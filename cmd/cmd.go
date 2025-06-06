@@ -3,11 +3,12 @@ package cmd
 import (
 	"flag"
 	"fmt"
+	"os"
+
 	"github.com/fatkulnurk/gostarter/cmd/http"
 	"github.com/fatkulnurk/gostarter/cmd/scheduler"
 	"github.com/fatkulnurk/gostarter/cmd/worker"
 	"github.com/fatkulnurk/gostarter/config"
-	"os"
 )
 
 func ServeApp(svc string, cfg *config.Config) {
@@ -18,8 +19,8 @@ func ServeApp(svc string, cfg *config.Config) {
 	case "worker":
 		fmt.Println("Running in background worker mode...")
 		worker.Serve(cfg)
-	case "schedule":
-		fmt.Println("Running in schedule mode...")
+	case "scheduler":
+		fmt.Println("Running in scheduler mode...")
 		scheduler.Serve(cfg)
 	default:
 		_, err := fmt.Fprintf(os.Stderr, "Error: invalid --svc value: %s\n", svc)
