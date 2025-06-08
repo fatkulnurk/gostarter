@@ -86,6 +86,20 @@ func (s SMTPMailer) SendMail(ctx context.Context, msg InputSendMail) (*OutputSen
 		return nil, err
 	}
 
+	if msg.Destination.CcAddresses != nil {
+		err := message.Cc(msg.Destination.CcAddresses...)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if msg.Destination.BccAddresses != nil {
+		err := message.Bcc(msg.Destination.BccAddresses...)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	message.Subject(msg.Subject)
 	if msg.HtmlMessage != "" {
 		message.SetBodyString(mail.TypeTextHTML, msg.HtmlMessage)
@@ -105,4 +119,8 @@ func (s SMTPMailer) SendMail(ctx context.Context, msg InputSendMail) (*OutputSen
 	}
 
 	return &OutputSendMail{}, nil
+}
+
+func (s SMTPMailer) SendMailRaw(ctx context.Context, buffer *bytes.Buffer) (*OutputSendMail, error) {
+	return nil, nil
 }
