@@ -1,20 +1,20 @@
 # GoStarter
 
-A starter template for Go applications with support for HTTP services, background workers, and schedulers.
+A starter template for Go applications with support for HTTP services, Database, Cache, background Jobs, and Schedulers.
+
+> **Note:** ⚠️ This project is currently under development and not production ready.
 
 ## Features
 
 - HTTP server using Fiber framework
-- Background worker using Asynq
+- Background Jobs using Asynq
 - Scheduled tasks with Asynq Scheduler
-- MySQL and Redis support
-- S3 compatible storage
-- AWS SES for email delivery
-- SMTP for email delivery
+- Database using MySQL
+- Cache using Redis
+- Storage using Local and S3
+- Mailer using SMTP and AWS SES
 - Docker and Docker Compose ready
 - Structured logging with Zap
-
-> **Note:** This project is currently under development and not production ready.
 
 ## Getting Started
 

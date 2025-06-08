@@ -2,7 +2,6 @@ package cache
 
 import (
 	"context"
-	"github.com/fatkulnurk/gostarter/pkg/interfaces"
 	"github.com/redis/go-redis/v9"
 	"time"
 )
@@ -11,7 +10,7 @@ type RedisCache struct {
 	client *redis.Client
 }
 
-func NewRedisCache(client *redis.Client) interfaces.ICache {
+func NewRedisCache(client *redis.Client) ICache {
 	return &RedisCache{client: client}
 }
 

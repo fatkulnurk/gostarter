@@ -3,24 +3,24 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
+
 	"github.com/fatkulnurk/gostarter/cmd"
 	"github.com/fatkulnurk/gostarter/config"
 	"github.com/fatkulnurk/gostarter/pkg/logging"
-	"os"
 )
 
 func main() {
-	cfg := config.New(os.Getenv("environment"))
-
-	// logging
+	env := os.Getenv("environment")
+	cfg := config.New(env)
 	logging.InitLogger()
 
-	svc := flag.String("svc", "", "specify application mode: http or worker")
+	svc := flag.String("svc", "", "specify application mode: http, worker, scheduler")
 	flag.Parse()
+
 	if *svc == "" {
-		_, err := fmt.Fprintf(os.Stderr, "Error: --svc flag is required\n")
-		if err != nil {
-			return
+		if _, err := fmt.Fprintf(os.Stderr, "Error: --svc flag is required\n"); err != nil {
+			os.Exit(2)
 		}
 		flag.Usage()
 		os.Exit(1)
