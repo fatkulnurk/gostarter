@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+
 	"github.com/fatkulnurk/gostarter/config"
 	"github.com/fatkulnurk/gostarter/pkg/logging"
 	"github.com/wneessen/go-mail"
@@ -98,8 +99,4 @@ func (s SMTPMailer) SendMail(ctx context.Context, msg InputSendMail) (*OutputSen
 	}
 
 	return &OutputSendMail{}, nil
-}
-
-func (s SMTPMailer) SendMailRaw(ctx context.Context, buffer *bytes.Buffer) (*OutputSendMail, error) {
-	return nil, nil
 }
