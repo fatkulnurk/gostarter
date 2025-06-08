@@ -167,10 +167,19 @@ func (s *S3Storage) File(ctx context.Context, path string, expiryTempUrl *time.D
 		tempUrl = presignUrl.URL
 	}
 
-	// Generate a direct URL to the object
-	objectUrl := fmt.Sprintf("https://%s.s3.%s.amazonaws.com/%s", s.cfg.Bucket, s.cfg.Region, path)
-	if s.cfg.UseStylePathEndpoint {
-		objectUrl = fmt.Sprintf("https://s3.%s.amazonaws.com/%s/%s", s.cfg.Region, s.cfg.Bucket, path)
+	objectUrl := ""
+	if s.cfg.Url == "" {
+		// Generate a direct URL to the object
+		objectUrl = fmt.Sprintf("https://%s.s3.%s.amazonaws.com/%s", s.cfg.Bucket, s.cfg.Region, path)
+		if s.cfg.UseStylePathEndpoint {
+			objectUrl = fmt.Sprintf("https://s3.%s.amazonaws.com/%s/%s", s.cfg.Region, s.cfg.Bucket, path)
+		}
+	} else {
+		if s.cfg.UseStylePathEndpoint {
+			objectUrl = fmt.Sprintf("%s/%s/%s", s.cfg.Url, s.cfg.Bucket, path)
+		} else {
+			objectUrl = fmt.Sprintf("%s/%s", s.cfg.Url, path)
+		}
 	}
 
 	size := int64(0)

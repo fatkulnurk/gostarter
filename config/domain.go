@@ -89,7 +89,7 @@ type S3 struct {
 	AccessKey            string
 	SecretKey            string
 	Session              string
-	Url                  string // url for generate url
+	Url                  string // url for generate url, if fill this field, it will be used to generate url for file, example https://minio.example.com for usePathStyleEndpoint = true, and https://bucket.minio.example.com for usePathStyleEndpoint = false
 	UseStylePathEndpoint bool   // if true, format will be s3.amazonaws.com/bucket, if false, format will be bucket.s3.amazonaws.com
 }
 
