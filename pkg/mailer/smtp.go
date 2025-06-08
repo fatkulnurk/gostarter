@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/fatkulnurk/gostarter/config"
 	"github.com/fatkulnurk/gostarter/pkg/logging"
@@ -57,25 +56,6 @@ func (s SMTPMailer) SendMail(ctx context.Context, msg InputSendMail) (*OutputSen
 		return nil, errors.New("destination can't be empty")
 	}
 
-	sender := fmt.Sprintf("%s <%s>", senderName, senderAddress)
-	rawMessage, err := buildRawMessage(ctx, InputBuildRawMessage{
-		Subject:     msg.Subject,
-		TextMessage: msg.TextMessage,
-		HtmlMessage: msg.HtmlMessage,
-		Sender: Sender{
-			FromAddress: senderAddress,
-			FromName:    senderName,
-		},
-		Destination: &msg.Destination,
-		Attachments: msg.Attachments,
-		Boundary:    msg.Boundary,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	_, _ = sender, rawMessage
-
 	message := mail.NewMsg()
 	if err := message.FromFormat(senderName, senderAddress); err != nil {
 		logging.Fatalf("failed to set FROM address: %s", err)
@@ -84,6 +64,20 @@ func (s SMTPMailer) SendMail(ctx context.Context, msg InputSendMail) (*OutputSen
 	if err := message.To(msg.Destination.ToAddresses...); err != nil {
 		logging.Fatalf("failed to set TO address: %s", err)
 		return nil, err
+	}
+
+	if msg.Destination.CcAddresses != nil {
+		err := message.Cc(msg.Destination.CcAddresses...)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if msg.Destination.BccAddresses != nil {
+		err := message.Bcc(msg.Destination.BccAddresses...)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	message.Subject(msg.Subject)

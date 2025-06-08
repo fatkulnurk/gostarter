@@ -2,6 +2,9 @@ package mailer
 
 import (
 	"context"
+	"errors"
+	"fmt"
+	"github.com/aws/aws-sdk-go-v2/aws"
 	awsconfig "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/sesv2"
 	"github.com/aws/aws-sdk-go-v2/service/sesv2/types"
@@ -42,37 +45,31 @@ func (s *SESMailer) SendMail(ctx context.Context, msg InputSendMail) (*OutputSen
 		fromName = msg.Sender.FromName
 	}
 
+	if msg.Destination.ToAddresses == nil {
+		return nil, errors.New("destination can't be empty")
+	}
+
+	fromSender := fmt.Sprintf("%s <%s>", fromName, fromEmailAddress)
 	input := &sesv2.SendEmailInput{
+		FromEmailAddress: aws.String(fromSender),
 		Destination: &types.Destination{
 			ToAddresses:  msg.Destination.ToAddresses,
 			CcAddresses:  msg.Destination.CcAddresses,
 			BccAddresses: msg.Destination.BccAddresses,
 		},
-		Message: &types.Message{
-			Body: &types.Body{},
-			Subject: &types.Content{
-				Data: &msg.Subject,
-			},
-		},
-		Source: &fromName,
-	}
-
-	if msg.IsHTML {
-		input.Message.Body.Html = &types.Content{Data: &msg.Body}
-	} else {
-		input.Message.Body.Text = &types.Content{Data: &msg.Body}
+		Content: nil,
 	}
 
 	if msg.Attachments != nil {
 		rawMessage, err := buildRawMessage(ctx, InputBuildRawMessage{
 			Subject:     msg.Subject,
-			TextMessage: msg.Body,
-			HtmlMessage: msg.Body,
+			TextMessage: msg.TextMessage,
+			HtmlMessage: msg.HtmlMessage,
 			Sender: Sender{
 				FromAddress: fromEmailAddress,
 				FromName:    fromName,
 			},
-			Destination: msg.Destination,
+			Destination: &msg.Destination,
 			Attachments: msg.Attachments,
 			Boundary:    msg.Boundary,
 		})
@@ -89,14 +86,14 @@ func (s *SESMailer) SendMail(ctx context.Context, msg InputSendMail) (*OutputSen
 			Simple: &types.Message{
 				Body: &types.Body{
 					Text: &types.Content{
-						Data: &i.TextMessage,
+						Data: &msg.TextMessage,
 					},
 					Html: &types.Content{
-						Data: &i.HtmlMessage,
+						Data: &msg.HtmlMessage,
 					},
 				},
 				Subject: &types.Content{
-					Data: &i.Subject,
+					Data: &msg.Subject,
 				},
 			},
 		}
@@ -104,7 +101,6 @@ func (s *SESMailer) SendMail(ctx context.Context, msg InputSendMail) (*OutputSen
 
 	res, err := s.client.SendEmail(context.Background(), input)
 	if err != nil {
-		logging.Fatalf("failed to deliver mail: %s", err)
 		return nil, err
 	}
 
