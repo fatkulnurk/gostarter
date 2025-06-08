@@ -3,39 +3,50 @@ package mailer
 import (
 	"context"
 	awsconfig "github.com/aws/aws-sdk-go-v2/config"
-	"github.com/aws/aws-sdk-go-v2/service/ses"
-	"github.com/aws/aws-sdk-go-v2/service/ses/types"
+	"github.com/aws/aws-sdk-go-v2/service/sesv2"
+	"github.com/aws/aws-sdk-go-v2/service/sesv2/types"
 	"github.com/fatkulnurk/gostarter/config"
-	"github.com/fatkulnurk/gostarter/pkg/interfaces"
 	"github.com/fatkulnurk/gostarter/pkg/logging"
 )
 
-func NewSESClient(cfg *config.SES) (*ses.Client, error) {
+func NewSESClient(cfg *config.SES) (*sesv2.Client, error) {
 	awscfg, err := awsconfig.LoadDefaultConfig(context.TODO(), awsconfig.WithRegion("us-west-2"))
 	if err != nil {
 		logging.Fatalf("unable to load SDK config, %v", err)
 		return nil, err
 	}
 
-	return ses.NewFromConfig(awscfg), nil
+	return sesv2.NewFromConfig(awscfg), nil
 }
 
 type SESMailer struct {
-	client *ses.Client
-	from   string
+	client                *sesv2.Client
+	fromAddress, fromName string
 }
 
-func NewSESMailer(client *ses.Client, from string) interfaces.IMailer {
+func NewSESMailer(client *sesv2.Client, fromAddress string, fromName string) IMailer {
 	return &SESMailer{
-		client: client,
-		from:   from,
+		client:      client,
+		fromAddress: fromAddress,
+		fromName:    fromName,
 	}
 }
 
-func (m *SESMailer) SendMail(msg interfaces.MailMessage) error {
-	input := &ses.SendEmailInput{
+func (s *SESMailer) SendMail(ctx context.Context, msg InputSendMail) (*OutputSendMail, error) {
+	fromEmailAddress := s.fromAddress
+	if msg.Sender != nil && msg.Sender.FromAddress != "" {
+		fromEmailAddress = msg.Sender.FromAddress
+	}
+	fromName := s.fromName
+	if msg.Sender != nil && msg.Sender.FromName != "" {
+		fromName = msg.Sender.FromName
+	}
+
+	input := &sesv2.SendEmailInput{
 		Destination: &types.Destination{
-			ToAddresses: []string{msg.To},
+			ToAddresses:  msg.Destination.ToAddresses,
+			CcAddresses:  msg.Destination.CcAddresses,
+			BccAddresses: msg.Destination.BccAddresses,
 		},
 		Message: &types.Message{
 			Body: &types.Body{},
@@ -43,7 +54,7 @@ func (m *SESMailer) SendMail(msg interfaces.MailMessage) error {
 				Data: &msg.Subject,
 			},
 		},
-		Source: &m.from,
+		Source: &fromName,
 	}
 
 	if msg.IsHTML {
@@ -52,6 +63,50 @@ func (m *SESMailer) SendMail(msg interfaces.MailMessage) error {
 		input.Message.Body.Text = &types.Content{Data: &msg.Body}
 	}
 
-	_, err := m.client.SendEmail(context.Background(), input)
-	return err
+	if msg.Attachments != nil {
+		rawMessage, err := buildRawMessage(ctx, InputBuildRawMessage{
+			Subject:     msg.Subject,
+			TextMessage: msg.Body,
+			HtmlMessage: msg.Body,
+			Sender: Sender{
+				FromAddress: fromEmailAddress,
+				FromName:    fromName,
+			},
+			Destination: msg.Destination,
+			Attachments: msg.Attachments,
+			Boundary:    msg.Boundary,
+		})
+		if err != nil {
+			return nil, err
+		}
+		input.Content = &types.EmailContent{
+			Raw: &types.RawMessage{
+				Data: rawMessage.Bytes(),
+			},
+		}
+	} else {
+		input.Content = &types.EmailContent{
+			Simple: &types.Message{
+				Body: &types.Body{
+					Text: &types.Content{
+						Data: &i.TextMessage,
+					},
+					Html: &types.Content{
+						Data: &i.HtmlMessage,
+					},
+				},
+				Subject: &types.Content{
+					Data: &i.Subject,
+				},
+			},
+		}
+	}
+
+	res, err := s.client.SendEmail(context.Background(), input)
+	if err != nil {
+		logging.Fatalf("failed to deliver mail: %s", err)
+		return nil, err
+	}
+
+	return &OutputSendMail{MessageID: res.MessageId}, err
 }
