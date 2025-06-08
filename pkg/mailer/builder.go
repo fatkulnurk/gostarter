@@ -20,6 +20,76 @@ func joinEmails(emails []string) string {
 	return buf.String()
 }
 
+type InputBuildRawMessage struct {
+	// Email subject
+	Subject string
+
+	// Email's plain text content, with header text/plain; charset="UTF-8"
+	TextMessage string
+
+	// Email's HTML content, with header text/html; charset="UTF-8"
+	HtmlMessage string
+
+	// Sender using for sent email, required
+	Sender Sender
+
+	// Email's recipient details
+	Destination *Destination
+
+	// Attachments to be added to the email
+	Attachments []Attachment
+
+	// Boundary for MIME parts
+	Boundary string
+}
+
+type RawMessage struct {
+	input InputBuildRawMessage
+}
+
+func NewRawMessage() *RawMessage {
+	return &RawMessage{}
+}
+
+func (r *RawMessage) SetSubject(subject string) *RawMessage {
+	r.input.Subject = subject
+	return r
+}
+
+func (r *RawMessage) SetTextMessage(textMessage string) *RawMessage {
+	r.input.TextMessage = textMessage
+	return r
+}
+
+func (r *RawMessage) SetHtmlMessage(htmlMessage string) *RawMessage {
+	r.input.HtmlMessage = htmlMessage
+	return r
+}
+
+func (r *RawMessage) SetSender(sender Sender) *RawMessage {
+	r.input.Sender = sender
+	return r
+}
+
+func (r *RawMessage) SetDestination(destination Destination) *RawMessage {
+	r.input.Destination = &destination
+	return r
+}
+
+func (r *RawMessage) SetAttachments(attachments []Attachment) *RawMessage {
+	r.input.Attachments = attachments
+	return r
+}
+
+func (r *RawMessage) SetBoundary(boundary string) *RawMessage {
+	r.input.Boundary = boundary
+	return r
+}
+
+func (r *RawMessage) Build(ctx context.Context) (*bytes.Buffer, error) {
+	return buildRawMessage(ctx, r.input)
+}
+
 func buildRawMessage(ctx context.Context, i InputBuildRawMessage) (*bytes.Buffer, error) {
 	// MIME Message
 	var rawMessage bytes.Buffer

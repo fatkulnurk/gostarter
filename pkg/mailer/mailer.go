@@ -53,26 +53,3 @@ type InputSendMail struct {
 type OutputSendMail struct {
 	MessageID *string
 }
-
-type InputBuildRawMessage struct {
-	// Email subject
-	Subject string
-
-	// Email's plain text content, with header text/plain; charset="UTF-8"
-	TextMessage string
-
-	// Email's HTML content, with header text/html; charset="UTF-8"
-	HtmlMessage string
-
-	// Sender using for sent email, required
-	Sender Sender
-
-	// Email's recipient details
-	Destination *Destination
-
-	// Attachments to be added to the email
-	Attachments []Attachment
-
-	// Boundary for MIME parts
-	Boundary string
-}
