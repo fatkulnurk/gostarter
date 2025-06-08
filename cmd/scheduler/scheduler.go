@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"github.com/fatkulnurk/gostarter/config"
 	"github.com/fatkulnurk/gostarter/internal/example"
-	"github.com/fatkulnurk/gostarter/pkg"
 	"github.com/fatkulnurk/gostarter/pkg/db"
+	"github.com/fatkulnurk/gostarter/pkg/module"
 	pkgqueue "github.com/fatkulnurk/gostarter/pkg/queue"
+	"github.com/fatkulnurk/gostarter/shared/infrastructure"
 	"github.com/hibiken/asynq"
 	"log"
 	"time"
@@ -14,7 +15,7 @@ import (
 
 func Serve(cfg *config.Config) {
 	// adapter, only register what you need
-	adapter := func(cfg *config.Config) *pkg.Adapter {
+	adapter := func(cfg *config.Config) *infrastructure.Adapter {
 		mysql, err := db.NewMySQL(cfg.Database)
 		if err != nil {
 			panic(err)
@@ -30,7 +31,7 @@ func Serve(cfg *config.Config) {
 			panic(err)
 		}
 
-		return &pkg.Adapter{
+		return &infrastructure.Adapter{
 			DB:    mysql,
 			Redis: redis,
 			Queue: queue,
@@ -38,7 +39,7 @@ func Serve(cfg *config.Config) {
 	}(cfg)
 
 	// delivery, only register what you need
-	delivery := func(cfg *config.Config, adapter *pkg.Adapter) *pkg.Delivery {
+	delivery := func(cfg *config.Config, adapter *infrastructure.Adapter) *infrastructure.Delivery {
 		timeLocation, err := time.LoadLocation(cfg.Schedule.Timezone)
 		if err != nil {
 			panic(err)
@@ -48,7 +49,7 @@ func Serve(cfg *config.Config) {
 		scheduler := asynq.NewSchedulerFromRedisClient(adapter.Redis, &asynq.SchedulerOpts{
 			Location: timeLocation,
 		})
-		return &pkg.Delivery{
+		return &infrastructure.Delivery{
 			Task:     mux,
 			Schedule: scheduler,
 		}
@@ -56,7 +57,7 @@ func Serve(cfg *config.Config) {
 
 	// Register modules
 	func() {
-		var modules []pkg.IModule
+		var modules []module.IModule
 		modules = append(modules, example.New(adapter, delivery))
 
 		fmt.Printf("-------Register module------\n")

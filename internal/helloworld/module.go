@@ -5,30 +5,31 @@ import (
 	"github.com/fatkulnurk/gostarter/internal/helloworld/delivery"
 	"github.com/fatkulnurk/gostarter/internal/helloworld/domain"
 	"github.com/fatkulnurk/gostarter/internal/helloworld/repository"
-	"github.com/fatkulnurk/gostarter/internal/helloworld/usecase"
-	"github.com/fatkulnurk/gostarter/pkg"
+	"github.com/fatkulnurk/gostarter/internal/helloworld/service"
+	"github.com/fatkulnurk/gostarter/pkg/module"
+	"github.com/fatkulnurk/gostarter/shared/infrastructure"
 	"github.com/hibiken/asynq"
 )
 
 type Module struct {
-	Adapter  *pkg.Adapter
-	Delivery *pkg.Delivery
-	Usecase  *domain.IUsecase
+	Adapter  *infrastructure.Adapter
+	Delivery *infrastructure.Delivery
+	Service  *domain.Service
 }
 
-func New(adapter *pkg.Adapter, delivery *pkg.Delivery) pkg.IModule {
-	repo := repository.NewRepository(adapter.DB)
-	svc := usecase.NewUseCase(repo)
+func New(adapter *infrastructure.Adapter, delivery *infrastructure.Delivery) module.IModule {
+	repo := repository.NewRepository(adapter.DB.Sql)
+	svc := service.NewService(repo)
 
 	return &Module{
 		Adapter:  adapter,
 		Delivery: delivery,
-		Usecase:  &svc,
+		Service:  &svc,
 	}
 }
 
-func (m *Module) GetInfo() *pkg.Module {
-	return &pkg.Module{
+func (m *Module) GetInfo() *module.Module {
+	return &module.Module{
 		Name:   "HelloWorld",
 		Prefix: "hello-world",
 	}
@@ -39,7 +40,7 @@ func (m *Module) RegisterHTTP() {
 		panic("router is nil")
 	}
 
-	deliveryHttp := delivery.NewDeliveryHttp(m.Usecase)
+	deliveryHttp := delivery.NewDeliveryHttp(m.Service)
 
 	// app
 	app := m.Delivery.HTTP.Group(fmt.Sprintf("/%s", m.GetInfo().Prefix))
@@ -55,10 +56,10 @@ func (m *Module) RegisterTask() {
 		panic("task is nil")
 	}
 
-	deliveryTask := delivery.NewDeliveryQueue(m.Usecase)
+	deliveryTask := delivery.NewDeliveryQueue(m.Service)
 	m.Delivery.Task.HandleFunc(m.GetInfo().Prefix+":example", deliveryTask.HandleExample)
 
-	deliverySchedule := delivery.NewScheduleDelivery(m.Usecase)
+	deliverySchedule := delivery.NewScheduleDelivery(m.Service)
 	m.Delivery.Task.HandleFunc(m.GetInfo().Prefix+":schedule::example", deliverySchedule.HandleTaskScheduleExample)
 }
 

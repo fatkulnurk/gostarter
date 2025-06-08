@@ -1,6 +1,6 @@
-package usecase
+package service
 
-import "github.com/fatkulnurk/gostarter/internal/example/domain"
+import "github.com/fatkulnurk/gostarter/internal/helloworld/domain"
 
 type Service struct {
 	repo domain.Repository

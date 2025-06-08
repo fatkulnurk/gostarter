@@ -9,11 +9,11 @@ import (
 )
 
 type TaskDelivery struct {
-	usecase domain.IUsecase
+	service domain.Service
 }
 
-func NewDeliveryQueue(usecase domain.IUsecase) *TaskDelivery {
-	return &TaskDelivery{usecase: usecase}
+func NewDeliveryQueue(service domain.Service) *TaskDelivery {
+	return &TaskDelivery{service: service}
 }
 
 func (t TaskDelivery) HandleExample(ctx context.Context, task *asynq.Task) error {

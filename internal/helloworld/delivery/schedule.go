@@ -10,12 +10,12 @@ import (
 )
 
 type ScheduleDelivery struct {
-	usecase domain.IUsecase
+	service domain.Service
 }
 
-func NewScheduleDelivery(usecase domain.IUsecase) *ScheduleDelivery {
+func NewScheduleDelivery(service domain.Service) *ScheduleDelivery {
 	return &ScheduleDelivery{
-		usecase: usecase,
+		service: service,
 	}
 }
 

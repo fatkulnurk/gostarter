@@ -9,6 +9,6 @@ type Repository struct {
 	db *sql.DB
 }
 
-func NewRepository(db *sql.DB) domain.IRepository {
+func NewRepository(db *sql.DB) domain.Repository {
 	return &Repository{db: db}
 }

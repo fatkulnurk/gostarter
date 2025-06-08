@@ -3,6 +3,8 @@ package http
 import (
 	"context"
 	"fmt"
+	"github.com/fatkulnurk/gostarter/pkg/module"
+	"github.com/fatkulnurk/gostarter/shared/infrastructure"
 	"os"
 	"os/signal"
 	"syscall"
@@ -12,7 +14,6 @@ import (
 
 	"github.com/fatkulnurk/gostarter/config"
 	"github.com/fatkulnurk/gostarter/internal/example"
-	"github.com/fatkulnurk/gostarter/pkg"
 	"github.com/fatkulnurk/gostarter/pkg/db"
 	pkgqueue "github.com/fatkulnurk/gostarter/pkg/queue"
 	"github.com/gofiber/fiber/v2"
@@ -21,7 +22,7 @@ import (
 
 func Serve(cfg *config.Config) {
 	// adapter, only register what you need
-	adapter := func(cfg *config.Config) *pkg.Adapter {
+	adapter := func(cfg *config.Config) *infrastructure.Adapter {
 		mysql, err := db.NewMySQL(cfg.Database)
 		if err != nil {
 			panic(err)
@@ -37,7 +38,7 @@ func Serve(cfg *config.Config) {
 			panic(err)
 		}
 
-		return &pkg.Adapter{
+		return &infrastructure.Adapter{
 			DB:    mysql,
 			Redis: redis,
 			Queue: queue,
@@ -45,15 +46,15 @@ func Serve(cfg *config.Config) {
 	}(cfg)
 
 	// delivery, only register what you need
-	delivery := func(cfg *config.Config) *pkg.Delivery {
-		return &pkg.Delivery{
+	delivery := func(cfg *config.Config) *infrastructure.Delivery {
+		return &infrastructure.Delivery{
 			HTTP: initHttp(cfg),
 		}
 	}(cfg)
 
 	// Register modules
 	func() {
-		var modules []pkg.IModule
+		var modules []module.IModule
 		modules = append(modules, example.New(adapter, delivery))
 
 		fmt.Printf("-------Register module------\n")
