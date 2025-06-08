@@ -33,7 +33,7 @@ type SMTPMailer struct {
 	fromAddress, fromName string
 }
 
-func NewSMTPMailer(client *mail.Client, fromAddress, FromName string) IMailer {
+func NewSMTPMailer(client *mail.Client, fromAddress, FromName string) Mailer {
 	return &SMTPMailer{
 		client:      client,
 		fromName:    FromName,

@@ -39,7 +39,7 @@ type S3Storage struct {
 	cfg           appcfg.S3
 }
 
-func NewS3Storage(client *s3.Client, cfg appcfg.S3) IStorage {
+func NewS3Storage(client *s3.Client, cfg appcfg.S3) Storage {
 	presignClient := s3.NewPresignClient(client)
 
 	return &S3Storage{

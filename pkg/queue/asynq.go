@@ -26,7 +26,7 @@ type AsynqQueue struct {
 	client *asynq.Client
 }
 
-func NewAsynqQueue(client *asynq.Client) IQueue {
+func NewAsynqQueue(client *asynq.Client) Queue {
 	return &AsynqQueue{client: client}
 }
 

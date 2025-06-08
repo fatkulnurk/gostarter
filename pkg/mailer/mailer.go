@@ -2,7 +2,7 @@ package mailer
 
 import "context"
 
-type IMailer interface {
+type Mailer interface {
 	SendMail(ctx context.Context, msg InputSendMail) (*OutputSendMail, error)
 }
 

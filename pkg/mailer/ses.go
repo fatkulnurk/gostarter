@@ -27,7 +27,7 @@ type SESMailer struct {
 	fromAddress, fromName string
 }
 
-func NewSESMailer(client *sesv2.Client, fromAddress string, fromName string) IMailer {
+func NewSESMailer(client *sesv2.Client, fromAddress string, fromName string) Mailer {
 	return &SESMailer{
 		client:      client,
 		fromAddress: fromAddress,
