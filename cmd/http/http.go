@@ -33,15 +33,18 @@ func Serve(cfg *config.Config) {
 			panic(err)
 		}
 
-		queue, err := pkgqueue.NewAsynqClient(cfg.Queue, redis)
+		asynqClient, err := pkgqueue.NewAsynqClient(cfg.Queue, redis)
 		if err != nil {
 			panic(err)
 		}
+		queue := pkgqueue.NewAsynqQueue(asynqClient)
 
 		return &infrastructure.Adapter{
-			DB:    mysql,
-			Redis: redis,
-			Queue: queue,
+			DB: &infrastructure.DatabaseConnection{
+				Sql:   mysql,
+				Redis: redis,
+			},
+			Queue: &queue,
 		}
 	}(cfg)
 
@@ -57,12 +60,12 @@ func Serve(cfg *config.Config) {
 		var modules []module.IModule
 		modules = append(modules, example.New(adapter, delivery))
 
-		fmt.Printf("-------Register module------\n")
-		for idx, module := range modules {
+		fmt.Printf("-------Register mdl------\n")
+		for idx, mdl := range modules {
 			fmt.Printf("number: %d\n", idx+1)
-			fmt.Printf("Registering module: %s\n", module.GetInfo().Name)
-			fmt.Printf("Prefix: %s\n", module.GetInfo().Prefix)
-			module.RegisterHTTP()
+			fmt.Printf("Registering mdl: %s\n", mdl.GetInfo().Name)
+			fmt.Printf("Prefix: %s\n", mdl.GetInfo().Prefix)
+			mdl.RegisterHTTP()
 			fmt.Printf("-------------------------\n")
 		}
 	}()

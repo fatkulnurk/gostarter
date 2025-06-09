@@ -26,15 +26,18 @@ func Serve(cfg *config.Config) {
 			panic(err)
 		}
 
-		queue, err := pkgqueue.NewAsynqClient(cfg.Queue, redis)
+		asynqClient, err := pkgqueue.NewAsynqClient(cfg.Queue, redis)
 		if err != nil {
 			panic(err)
 		}
+		queue := pkgqueue.NewAsynqQueue(asynqClient)
 
 		return &infrastructure.Adapter{
-			DB:    mysql,
-			Redis: redis,
-			Queue: queue,
+			DB: &infrastructure.DatabaseConnection{
+				Sql:   mysql,
+				Redis: redis,
+			},
+			Queue: &queue,
 		}
 	}(cfg)
 
@@ -46,7 +49,7 @@ func Serve(cfg *config.Config) {
 		}
 
 		mux := asynq.NewServeMux()
-		scheduler := asynq.NewSchedulerFromRedisClient(adapter.Redis, &asynq.SchedulerOpts{
+		scheduler := asynq.NewSchedulerFromRedisClient(adapter.DB.Redis, &asynq.SchedulerOpts{
 			Location: timeLocation,
 		})
 		return &infrastructure.Delivery{
