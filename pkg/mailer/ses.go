@@ -15,7 +15,7 @@ import (
 func NewSESClient(cfg *config.SES) (*sesv2.Client, error) {
 	awscfg, err := awsconfig.LoadDefaultConfig(context.TODO(), awsconfig.WithRegion("us-west-2"))
 	if err != nil {
-		logging.Fatalf("unable to load SDK config, %v", err)
+		logging.Error(context.Background(), fmt.Sprintf("unable to load SDK config, %v", err))
 		return nil, err
 	}
 
