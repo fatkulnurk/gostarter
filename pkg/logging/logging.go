@@ -28,6 +28,10 @@ type Field struct {
 	Value any
 }
 
+func NewField(key string, value any) Field {
+	return Field{Key: key, Value: value}
+}
+
 var (
 	once sync.Once
 	l    Logger
