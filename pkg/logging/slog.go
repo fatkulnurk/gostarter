@@ -12,7 +12,9 @@ type slogLogger struct {
 
 func NewSlogLogger(logger *slog.Logger) Logger {
 	if logger == nil {
-		logger = slog.New(slog.NewTextHandler(os.Stdout, nil))
+		logger = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+			AddSource: true,
+		}))
 	}
 
 	return &slogLogger{logger: logger}
