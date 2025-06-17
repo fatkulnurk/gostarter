@@ -10,11 +10,15 @@ type slogLogger struct {
 	logger *slog.Logger
 }
 
+func defaultSlogLogger() *slog.Logger {
+	return slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+		AddSource: true,
+	}))
+}
+
 func NewSlogLogger(logger *slog.Logger) Logger {
 	if logger == nil {
-		logger = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
-			AddSource: true,
-		}))
+		logger = defaultSlogLogger()
 	}
 
 	return &slogLogger{logger: logger}
