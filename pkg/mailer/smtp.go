@@ -4,9 +4,10 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
+	"github.com/fatkulnurk/gostarter/pkg/logging"
 
 	"github.com/fatkulnurk/gostarter/config"
-	"github.com/fatkulnurk/gostarter/pkg/logging"
 	"github.com/wneessen/go-mail"
 )
 
@@ -21,7 +22,7 @@ func NewSmtp(cfg *config.SMTP) (*mail.Client, error) {
 	)
 
 	if err != nil {
-		logging.Fatalf("Error creating SMTP client: %s", err)
+		logging.Error(context.Background(), fmt.Sprintf("Error creating SMTP client: %s", err))
 		return nil, err
 	}
 
@@ -33,7 +34,7 @@ type SMTPMailer struct {
 	fromAddress, fromName string
 }
 
-func NewSMTPMailer(client *mail.Client, fromAddress, FromName string) IMailer {
+func NewSMTPMailer(client *mail.Client, fromAddress, FromName string) Mailer {
 	return &SMTPMailer{
 		client:      client,
 		fromName:    FromName,
@@ -58,11 +59,11 @@ func (s SMTPMailer) SendMail(ctx context.Context, msg InputSendMail) (*OutputSen
 
 	message := mail.NewMsg()
 	if err := message.FromFormat(senderName, senderAddress); err != nil {
-		logging.Fatalf("failed to set FROM address: %s", err)
+		logging.Error(context.Background(), fmt.Sprintf("failed to set FROM address: %s", err))
 		return nil, err
 	}
 	if err := message.To(msg.Destination.ToAddresses...); err != nil {
-		logging.Fatalf("failed to set TO address: %s", err)
+		logging.Error(context.Background(), fmt.Sprintf("failed to set TO address: %s", err))
 		return nil, err
 	}
 
@@ -94,7 +95,7 @@ func (s SMTPMailer) SendMail(ctx context.Context, msg InputSendMail) (*OutputSen
 	}
 
 	if err := s.client.DialAndSend(message); err != nil {
-		logging.Fatalf("failed to deliver mail: %s", err)
+		logging.Error(context.Background(), fmt.Sprintf("failed to deliver mail: %s", err))
 		return nil, err
 	}
 

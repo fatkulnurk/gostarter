@@ -7,11 +7,11 @@ import (
 )
 
 type HttpDelivery struct {
-	usecase domain.IUsecase
+	service domain.Service
 }
 
-func NewDeliveryHttp(usecase domain.IUsecase) *HttpDelivery {
-	return &HttpDelivery{usecase: usecase}
+func NewDeliveryHttp(service domain.Service) *HttpDelivery {
+	return &HttpDelivery{service: service}
 }
 
 func (d *HttpDelivery) HandleHelloWorld(c *fiber.Ctx) error {

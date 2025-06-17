@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 )
 
-type IStorage interface {
+type Storage interface {
 	Upload(ctx context.Context, input UploadInput) (*UploadOutput, error)
 	Delete(ctx context.Context, path string) error
 	Copy(ctx context.Context, sourcePath, destinationPath string) error

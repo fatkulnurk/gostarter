@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"github.com/fatkulnurk/gostarter/pkg/logging"
 	"io"
 	"path/filepath"
 	"strings"
@@ -14,7 +15,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	appcfg "github.com/fatkulnurk/gostarter/config"
-	"github.com/fatkulnurk/gostarter/pkg/logging"
 	"github.com/fatkulnurk/gostarter/pkg/utils"
 )
 
@@ -25,7 +25,7 @@ func NewS3Client(cfg appcfg.S3) (*s3.Client, error) {
 		config.WithCredentialsProvider(credentials.NewStaticCredentialsProvider(cfg.AccessKey, cfg.SecretKey, cfg.Session)),
 	)
 	if err != nil {
-		logging.Fatalf("unable to load SDK config, %v", err)
+		logging.Error(context.Background(), fmt.Sprintf("unable to load SDK config, %v", err))
 		return nil, err
 	}
 
@@ -39,7 +39,7 @@ type S3Storage struct {
 	cfg           appcfg.S3
 }
 
-func NewS3Storage(client *s3.Client, cfg appcfg.S3) IStorage {
+func NewS3Storage(client *s3.Client, cfg appcfg.S3) Storage {
 	presignClient := s3.NewPresignClient(client)
 
 	return &S3Storage{

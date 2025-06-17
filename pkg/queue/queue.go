@@ -7,8 +7,8 @@ import (
 	"github.com/hibiken/asynq"
 )
 
-// IQueue defines the interface for queueing tasks
-type IQueue interface {
+// Queue defines the interface for queueing tasks
+type Queue interface {
 	Enqueue(ctx context.Context, taskName string, payload any, opts ...Option) (*OutputEnqueue, error)
 }
 
@@ -43,9 +43,9 @@ func MaxRetry(n int) Option {
 	}
 }
 
-// Queue sets the queue name for a task
-// Example: queue.Enqueue(ctx, "email:send", payload, queue.Queue("critical"))
-func Queue(name string) Option {
+// QueueName sets the queue name for a task
+// Example: queue.Enqueue(ctx, "email:send", payload, queue.QueueName("critical"))
+func QueueName(name string) Option {
 	return func(o *options) {
 		o.queue = name
 	}

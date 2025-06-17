@@ -9,10 +9,10 @@ import (
 )
 
 type TaskDelivery struct {
-	usecase domain.IUsecase
+	usecase domain.Service
 }
 
-func NewDeliveryQueue(usecase domain.IUsecase) *TaskDelivery {
+func NewDeliveryQueue(usecase domain.Service) *TaskDelivery {
 	return &TaskDelivery{usecase: usecase}
 }
 

@@ -1,7 +1,7 @@
 package domain
 
-type IRepository interface {
+type Repository interface {
 }
 
-type IUsecase interface {
+type Service interface {
 }

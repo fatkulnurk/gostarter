@@ -2,7 +2,9 @@
 
 A starter template for Go applications with support for HTTP services, Database, Cache, background Jobs, and Schedulers.
 
-> **Note:** ⚠️ This project is currently under development and not production ready.
+> **Note:** 
+> ⚠️ This project is currently under development and not production ready.
+> ⚠️ This project is intended for personal/entertainment purposes only and not meant to be used in production environments.
 
 ## Features
 

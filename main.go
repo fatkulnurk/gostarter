@@ -13,7 +13,8 @@ import (
 func main() {
 	env := os.Getenv("environment")
 	cfg := config.New(env)
-	logging.InitLogger()
+	logger := logging.NewSlogLogger(nil)
+	logging.InitLogging(logger)
 
 	svc := flag.String("svc", "", "specify application mode: http, worker, scheduler")
 	flag.Parse()

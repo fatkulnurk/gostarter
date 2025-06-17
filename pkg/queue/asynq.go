@@ -3,9 +3,10 @@ package queue
 import (
 	"context"
 	"encoding/json"
+	"fmt"
+	"github.com/fatkulnurk/gostarter/pkg/logging"
 
 	"github.com/fatkulnurk/gostarter/config"
-	"github.com/fatkulnurk/gostarter/pkg/logging"
 	"github.com/hibiken/asynq"
 	"github.com/redis/go-redis/v9"
 )
@@ -15,7 +16,7 @@ func NewAsynqClient(cfg *config.Queue, redis *redis.Client) (*asynq.Client, erro
 
 	err := client.Ping()
 	if err != nil {
-		logging.Fatalf("failed to ping redis: %v", err)
+		logging.Error(context.Background(), fmt.Sprintf("failed to ping redis: %v", err))
 		return nil, err
 	}
 
@@ -26,7 +27,7 @@ type AsynqQueue struct {
 	client *asynq.Client
 }
 
-func NewAsynqQueue(client *asynq.Client) IQueue {
+func NewAsynqQueue(client *asynq.Client) Queue {
 	return &AsynqQueue{client: client}
 }
 

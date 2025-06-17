@@ -6,19 +6,20 @@ import (
 	"github.com/fatkulnurk/gostarter/internal/example/domain"
 	"github.com/fatkulnurk/gostarter/internal/example/repository"
 	"github.com/fatkulnurk/gostarter/internal/example/usecase"
-	"github.com/fatkulnurk/gostarter/pkg"
+	"github.com/fatkulnurk/gostarter/pkg/module"
+	"github.com/fatkulnurk/gostarter/shared/infrastructure"
 	"github.com/hibiken/asynq"
 )
 
 type Module struct {
-	Adapter  *pkg.Adapter
-	Delivery *pkg.Delivery
-	Usecase  *domain.IUsecase
+	Adapter  *infrastructure.Adapter
+	Delivery *infrastructure.Delivery
+	Usecase  *domain.Service
 }
 
-func New(adapter *pkg.Adapter, delivery *pkg.Delivery) pkg.IModule {
-	repo := repository.NewRepository(adapter.DB)
-	svc := usecase.NewUseCase(repo)
+func New(adapter *infrastructure.Adapter, delivery *infrastructure.Delivery) module.IModule {
+	repo := repository.NewRepository(adapter.DB.Sql)
+	svc := usecase.NewService(repo)
 
 	return &Module{
 		Adapter:  adapter,
@@ -27,8 +28,8 @@ func New(adapter *pkg.Adapter, delivery *pkg.Delivery) pkg.IModule {
 	}
 }
 
-func (m *Module) GetInfo() *pkg.Module {
-	return &pkg.Module{
+func (m *Module) GetInfo() *module.Module {
+	return &module.Module{
 		Name:   "Example",
 		Prefix: "example",
 	}

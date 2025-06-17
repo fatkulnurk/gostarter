@@ -1,11 +1,11 @@
 package middleware
 
 import (
+	"context"
+	"github.com/fatkulnurk/gostarter/pkg/logging"
 	"time"
 
-	"github.com/fatkulnurk/gostarter/pkg/logging"
 	"github.com/gofiber/fiber/v2"
-	"go.uber.org/zap"
 )
 
 func LoggingMiddleware() fiber.Handler {
@@ -27,19 +27,17 @@ func LoggingMiddleware() fiber.Handler {
 
 			// Check if there's a mismatch between actual status and what's being logged
 			if c.Response().StatusCode() != statusCode {
-				logging.Warn("Status code mismatch",
-					zap.Int("actual_status", c.Response().StatusCode()),
-					zap.Int("logged_status", statusCode))
+				logging.Warning(context.Background(), "Status code mismatch", logging.NewField("actual_status", c.Response().StatusCode()))
 			}
 
 			// Log request information
-			logging.Info("Incoming request",
-				zap.String("method", method),
-				zap.String("path", path),
-				zap.Int("status", c.Response().StatusCode()), // Get status directly from response
-				zap.String("ip", ip),
-				zap.String("user_agent", userAgent),
-				zap.Duration("latency", duration),
+			logging.Info(context.Background(), "Incoming request",
+				logging.NewField("method", method),
+				logging.NewField("path", path),
+				logging.NewField("status", statusCode),
+				logging.NewField("ip", ip),
+				logging.NewField("user_agent", userAgent),
+				logging.NewField("latency", duration),
 			)
 		}()
 
