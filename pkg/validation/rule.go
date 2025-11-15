@@ -25,9 +25,9 @@ func Custom(f func(field string, value any) *Error) Rule {
 //  RULE BUILDER UMUM
 // =========================
 
-// Required : value tidak boleh kosong (nil atau string kosong / spasi).
+// validateRequired : value tidak boleh kosong (nil atau string kosong / spasi).
 // Jika message kosong (""), akan pakai default message.
-func Required(message string) Rule {
+func validateRequired(message string) Rule {
 	return func(field string, value any) *Error {
 		msg := message
 		if value == nil {
@@ -51,8 +51,8 @@ func Required(message string) Rule {
 	}
 }
 
-// StrMinLength : panjang minimal untuk string.
-func StrMinLength(min int, message string) Rule {
+// validateStrMinLength : panjang minimal untuk string.
+func validateStrMinLength(min int, message string) Rule {
 	return func(field string, value any) *Error {
 		s, ok := value.(string)
 		if !ok {
@@ -74,8 +74,8 @@ func StrMinLength(min int, message string) Rule {
 	}
 }
 
-// StrMaxLength : panjang maksimal untuk string.
-func StrMaxLength(max int, message string) Rule {
+// validateStrMaxLength : panjang maksimal untuk string.
+func validateStrMaxLength(max int, message string) Rule {
 	return func(field string, value any) *Error {
 		s, ok := value.(string)
 		if !ok {
@@ -97,11 +97,11 @@ func StrMaxLength(max int, message string) Rule {
 	}
 }
 
-// Min : nilai minimal untuk angka (int, uint, float32, float64, dll).
-func Min(min float64, message string) Rule {
+// validateNumMin : nilai minimal untuk angka (int, uint, float32, float64, dll).
+func validateNumMin(min float64, message string) Rule {
 	return func(field string, value any) *Error {
 		if value == nil {
-			// Biarkan Required yang handle kalau dipakai
+			// Biarkan validateRequired yang handle kalau dipakai
 			return nil
 		}
 
@@ -125,8 +125,8 @@ func Min(min float64, message string) Rule {
 	}
 }
 
-// Max : nilai maksimal untuk angka (int, uint, float32, float64, dll).
-func Max(max float64, message string) Rule {
+// validateNumMax : nilai maksimal untuk angka (int, uint, float32, float64, dll).
+func validateNumMax(max float64, message string) Rule {
 	return func(field string, value any) *Error {
 		if value == nil {
 			return nil
@@ -152,7 +152,7 @@ func Max(max float64, message string) Rule {
 	}
 }
 
-func Username(message string) Rule {
+func validateUsername(message string) Rule {
 	return func(field string, value any) *Error {
 		s, ok := value.(string)
 		if !ok {
@@ -183,7 +183,7 @@ func Username(message string) Rule {
 	}
 }
 
-func Phone(message string) Rule {
+func validatePhone(message string) Rule {
 	return func(field string, value any) *Error {
 		s, ok := value.(string)
 		if !ok {
@@ -195,7 +195,7 @@ func Phone(message string) Rule {
 
 		s = strings.TrimSpace(s)
 		if s == "" {
-			// Biarkan Required yang handle jika dipakai
+			// Biarkan validateRequired yang handle jika dipakai
 			return nil
 		}
 
@@ -234,7 +234,7 @@ func Phone(message string) Rule {
 	}
 }
 
-func Password(message string) Rule {
+func validatePassword(message string) Rule {
 	return func(field string, value any) *Error {
 		s, ok := value.(string)
 		if !ok {
@@ -246,7 +246,7 @@ func Password(message string) Rule {
 
 		s = strings.TrimSpace(s)
 		if s == "" {
-			// Biarkan Required yang handle jika dipakai
+			// Biarkan validateRequired yang handle jika dipakai
 			return nil
 		}
 
@@ -288,7 +288,7 @@ func Password(message string) Rule {
 	}
 }
 
-func Url(message string) Rule {
+func validateURLFormat(message string) Rule {
 	return func(field string, value any) *Error {
 		s, ok := value.(string)
 		if !ok {
@@ -300,7 +300,7 @@ func Url(message string) Rule {
 
 		s = strings.TrimSpace(s)
 		if s == "" {
-			// Biarkan Required yang handle jika dipakai
+			// Biarkan validateRequired yang handle jika dipakai
 			return nil
 		}
 
@@ -325,7 +325,7 @@ func Url(message string) Rule {
 	}
 }
 
-func Date(message string) Rule {
+func validateDate(message string) Rule {
 	return func(field string, value any) *Error {
 		s, ok := value.(string)
 		if !ok {
@@ -337,7 +337,7 @@ func Date(message string) Rule {
 
 		s = strings.TrimSpace(s)
 		if s == "" {
-			// Biarkan Required yang handle jika dipakai
+			// Biarkan validateRequired yang handle jika dipakai
 			return nil
 		}
 
@@ -354,7 +354,7 @@ func Date(message string) Rule {
 	}
 }
 
-func AlphaNumeric(message string) Rule {
+func validateAlphaNumeric(message string) Rule {
 	return func(field string, value any) *Error {
 		s, ok := value.(string)
 		if !ok {
@@ -366,7 +366,7 @@ func AlphaNumeric(message string) Rule {
 
 		s = strings.TrimSpace(s)
 		if s == "" {
-			// Biarkan Required yang handle jika dipakai
+			// Biarkan validateRequired yang handle jika dipakai
 			return nil
 		}
 
@@ -384,7 +384,7 @@ func AlphaNumeric(message string) Rule {
 	}
 }
 
-func UUID(message string) Rule {
+func validateUuid(message string) Rule {
 	return func(field string, value any) *Error {
 		s, ok := value.(string)
 		if !ok {
@@ -396,7 +396,7 @@ func UUID(message string) Rule {
 
 		s = strings.TrimSpace(s)
 		if s == "" {
-			// Biarkan Required yang handle jika dipakai
+			// Biarkan validateRequired yang handle jika dipakai
 			return nil
 		}
 
@@ -413,7 +413,7 @@ func UUID(message string) Rule {
 	}
 }
 
-func JSON(message string) Rule {
+func validateJson(message string) Rule {
 	return func(field string, value any) *Error {
 		s, ok := value.(string)
 		if !ok {
@@ -425,7 +425,7 @@ func JSON(message string) Rule {
 
 		s = strings.TrimSpace(s)
 		if s == "" {
-			// Biarkan Required yang handle jika dipakai
+			// Biarkan validateRequired yang handle jika dipakai
 			return nil
 		}
 
@@ -441,7 +441,7 @@ func JSON(message string) Rule {
 	}
 }
 
-func HexColor(message string) Rule {
+func validateHexColor(message string) Rule {
 	return func(field string, value any) *Error {
 		s, ok := value.(string)
 		if !ok {
@@ -453,7 +453,7 @@ func HexColor(message string) Rule {
 
 		s = strings.TrimSpace(s)
 		if s == "" {
-			// Biarkan Required yang handle jika dipakai
+			// Biarkan validateRequired yang handle jika dipakai
 			return nil
 		}
 
@@ -479,7 +479,7 @@ func HexColor(message string) Rule {
 	}
 }
 
-func CreditCard(message string) Rule {
+func validateCreditCard(message string) Rule {
 	return func(field string, value any) *Error {
 		s, ok := value.(string)
 		if !ok {
@@ -491,7 +491,7 @@ func CreditCard(message string) Rule {
 
 		s = strings.TrimSpace(s)
 		if s == "" {
-			// Biarkan Required yang handle jika dipakai
+			// Biarkan validateRequired yang handle jika dipakai
 			return nil
 		}
 
@@ -549,7 +549,7 @@ func CreditCard(message string) Rule {
 	}
 }
 
-func PostalCode(message string) Rule {
+func validatePostalCode(message string) Rule {
 	return func(field string, value any) *Error {
 		s, ok := value.(string)
 		if !ok {
@@ -561,7 +561,7 @@ func PostalCode(message string) Rule {
 
 		s = strings.TrimSpace(s)
 		if s == "" {
-			// Biarkan Required yang handle jika dipakai
+			// Biarkan validateRequired yang handle jika dipakai
 			return nil
 		}
 
@@ -588,7 +588,7 @@ func PostalCode(message string) Rule {
 	}
 }
 
-func Base64(message string) Rule {
+func validateBase64(message string) Rule {
 	return func(field string, value any) *Error {
 		s, ok := value.(string)
 		if !ok {
@@ -600,7 +600,7 @@ func Base64(message string) Rule {
 
 		s = strings.TrimSpace(s)
 		if s == "" {
-			// Biarkan Required yang handle jika dipakai
+			// Biarkan validateRequired yang handle jika dipakai
 			return nil
 		}
 

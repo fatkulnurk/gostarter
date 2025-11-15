@@ -10,7 +10,7 @@ import (
 //
 // Contoh:
 //
-//	"required,minlen=3,maxlen=10,email"
+//	"validateRequired,minlen=3,maxlen=10,email"
 //	"min=18,max=60"
 func parseTagToRules(tag string) []Rule {
 	parts := strings.Split(tag, ",")
@@ -24,34 +24,34 @@ func parseTagToRules(tag string) []Rule {
 
 		switch {
 		case p == RuleRequired:
-			rules = append(rules, Required(""))
+			rules = append(rules, validateRequired(""))
 
 		case strings.HasPrefix(p, RuleStrMinLength):
 			nStr := strings.TrimPrefix(p, RuleStrMinLength)
 			n, err := strconv.Atoi(nStr)
 			if err == nil {
-				rules = append(rules, StrMinLength(n, ""))
+				rules = append(rules, validateStrMinLength(n, ""))
 			}
 
 		case strings.HasPrefix(p, RuleStrMaxLength):
 			nStr := strings.TrimPrefix(p, RuleStrMaxLength)
 			n, err := strconv.Atoi(nStr)
 			if err == nil {
-				rules = append(rules, StrMaxLength(n, ""))
+				rules = append(rules, validateStrMaxLength(n, ""))
 			}
 
 		case strings.HasPrefix(p, RuleNumMin):
 			nStr := strings.TrimPrefix(p, RuleNumMin)
 			n, err := strconv.ParseFloat(nStr, 64)
 			if err == nil {
-				rules = append(rules, Min(n, ""))
+				rules = append(rules, validateNumMin(n, ""))
 			}
 
 		case strings.HasPrefix(p, RuleNumMax):
 			nStr := strings.TrimPrefix(p, RuleNumMax)
 			n, err := strconv.ParseFloat(nStr, 64)
 			if err == nil {
-				rules = append(rules, Max(n, ""))
+				rules = append(rules, validateNumMax(n, ""))
 			}
 
 		case p == RuleEmail:
@@ -65,7 +65,7 @@ func parseTagToRules(tag string) []Rule {
 				}
 				s = strings.TrimSpace(s)
 				if s == "" {
-					// Biar rule Required yang handle kalau dipakai
+					// Biar rule validateRequired yang handle kalau dipakai
 					return nil
 				}
 				if !strings.Contains(s, "@") {
@@ -87,7 +87,7 @@ func parseTagToRules(tag string) []Rule {
 				}
 				s = strings.TrimSpace(s)
 				if s == "" {
-					// Biar rule Required yang handle kalau dipakai
+					// Biar rule validateRequired yang handle kalau dipakai
 					return nil
 				}
 				ip := net.ParseIP(s)
@@ -110,7 +110,7 @@ func parseTagToRules(tag string) []Rule {
 				}
 				s = strings.TrimSpace(s)
 				if s == "" {
-					// Biar rule Required yang handle kalau dipakai
+					// Biar rule validateRequired yang handle kalau dipakai
 					return nil
 				}
 				ip := net.ParseIP(s)
@@ -133,7 +133,7 @@ func parseTagToRules(tag string) []Rule {
 				}
 				s = strings.TrimSpace(s)
 				if s == "" {
-					// Biar rule Required yang handle kalau dipakai
+					// Biar rule validateRequired yang handle kalau dipakai
 					return nil
 				}
 				ip := net.ParseIP(s)
@@ -146,29 +146,29 @@ func parseTagToRules(tag string) []Rule {
 				return nil
 			}))
 		case p == RuleUsername:
-			rules = append(rules, Username(""))
+			rules = append(rules, validateUsername(""))
 		case p == RulePhone:
-			rules = append(rules, Phone(""))
+			rules = append(rules, validatePhone(""))
 		case p == RulePassword:
-			rules = append(rules, Password(""))
+			rules = append(rules, validatePassword(""))
 		case p == RuleURL:
-			rules = append(rules, Url(""))
+			rules = append(rules, validateURLFormat(""))
 		case p == RuleDate:
-			rules = append(rules, Date(""))
+			rules = append(rules, validateDate(""))
 		case p == RuleAlphaNumeric:
-			rules = append(rules, AlphaNumeric(""))
+			rules = append(rules, validateAlphaNumeric(""))
 		case p == RuleUUID:
-			rules = append(rules, UUID(""))
+			rules = append(rules, validateUuid(""))
 		case p == RuleJSON:
-			rules = append(rules, JSON(""))
+			rules = append(rules, validateJson(""))
 		case p == RuleHexColor:
-			rules = append(rules, HexColor(""))
+			rules = append(rules, validateHexColor(""))
 		case p == RuleCreditCard:
-			rules = append(rules, CreditCard(""))
+			rules = append(rules, validateCreditCard(""))
 		case p == RulePostalCode:
-			rules = append(rules, PostalCode(""))
+			rules = append(rules, validatePostalCode(""))
 		case p == RuleBase64:
-			rules = append(rules, Base64(""))
+			rules = append(rules, validateBase64(""))
 		default:
 			// Tag tidak dikenal
 			panic("unknown tag: " + p)

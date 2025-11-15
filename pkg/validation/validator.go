@@ -49,11 +49,11 @@ func ValidateMap(data map[string]any, rules map[string][]Rule) Errors {
 // =========================
 //
 // Tag yang didukung (di tag `validate`):
-//   - required
-//   - min=<angka>      -> untuk angka (pakai Rule Min)
-//   - max=<angka>      -> untuk angka (pakai Rule Max)
-//   - minlen=<angka>   -> untuk string (pakai Rule StrMinLength)
-//   - maxlen=<angka>   -> untuk string (pakai Rule StrMaxLength)
+//   - validateRequired
+//   - min=<angka>      -> untuk angka (pakai Rule validateNumMin)
+//   - max=<angka>      -> untuk angka (pakai Rule validateNumMax)
+//   - minlen=<angka>   -> untuk string (pakai Rule validateStrMinLength)
+//   - maxlen=<angka>   -> untuk string (pakai Rule validateStrMaxLength)
 //   - email            -> cek sederhana format email (harus mengandung "@")
 //
 // Penentuan nama field di error:
