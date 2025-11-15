@@ -7,10 +7,10 @@ import (
 )
 
 type HttpDelivery struct {
-	usecase domain.IUsecase
+	usecase domain.Service
 }
 
-func NewDeliveryHttp(usecase domain.IUsecase) *HttpDelivery {
+func NewDeliveryHttp(usecase domain.Service) *HttpDelivery {
 	return &HttpDelivery{usecase: usecase}
 }
 
