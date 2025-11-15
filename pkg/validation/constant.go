@@ -4,6 +4,9 @@ const (
 	RuleRequired  = "required"
 	RuleMinLength = "minlen="
 	RuleMaxLength = "maxlen="
+	RuleMin       = "min="
+	RuleMax       = "max="
+	RuleEmail     = "email"
 )
 
 const (
