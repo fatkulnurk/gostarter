@@ -8,10 +8,10 @@ import (
 
 type RegisterRequest struct {
 	FirstName string `json:"first_name" validate:"required"`
-	Name      string `json:"name"     validate:"required,strminlength=3,strmaxlength=50"`
+	Name      string `json:"name"     validate:"required,strminlen=3,strmaxlen=50"`
 	Email     string `json:"email"    validate:"required,email"`
-	Age       int    `json:"age"      validate:"min=18,max=60"`
-	Username  string `json:"username" validate:"required,strminlength=3,strmaxlength=15"`
+	Age       int    `json:"age"      validate:"nummin=18,nummax=60"`
+	Username  string `json:"username" validate:"required,strminlen=3,strmaxlen=15"`
 	Bio       string `json:"bio"      validate:"strmaxlength=200"`
 }
 

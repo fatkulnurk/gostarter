@@ -39,15 +39,15 @@ func parseTagToRules(tag string) []Rule {
 				rules = append(rules, StrMaxLength(n, ""))
 			}
 
-		case strings.HasPrefix(p, RuleMin):
-			nStr := strings.TrimPrefix(p, RuleMin)
+		case strings.HasPrefix(p, RuleNumMin):
+			nStr := strings.TrimPrefix(p, RuleNumMin)
 			n, err := strconv.ParseFloat(nStr, 64)
 			if err == nil {
 				rules = append(rules, Min(n, ""))
 			}
 
-		case strings.HasPrefix(p, RuleMax):
-			nStr := strings.TrimPrefix(p, RuleMax)
+		case strings.HasPrefix(p, RuleNumMax):
+			nStr := strings.TrimPrefix(p, RuleNumMax)
 			n, err := strconv.ParseFloat(nStr, 64)
 			if err == nil {
 				rules = append(rules, Max(n, ""))

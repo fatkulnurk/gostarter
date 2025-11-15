@@ -4,8 +4,8 @@ const (
 	RuleRequired     = "required"
 	RuleStrMinLength = "strminlength="
 	RuleStrMaxLength = "strmaxlength="
-	RuleMin          = "min="
-	RuleMax          = "max="
+	RuleNumMin       = "nummin="
+	RuleNumMax       = "nummax="
 	RuleEmail        = "email"
 )
 
