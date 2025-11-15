@@ -12,7 +12,7 @@ type RegisterRequest struct {
 	Email     string `json:"email"    validate:"required,email"`
 	Age       int    `json:"age"      validate:"nummin=18,nummax=60"`
 	Username  string `json:"username" validate:"required,strminlen=3,strmaxlen=15"`
-	Bio       string `json:"bio"      validate:"strmaxlength=200"`
+	Bio       string `json:"bio"      validate:"strmaxlen=200"`
 }
 
 func main() {

@@ -78,6 +78,7 @@ func parseTagToRules(tag string) []Rule {
 
 		default:
 			// Tag tidak dikenal -> di-skip saja
+			panic("tag tidak dikenal: " + p)
 		}
 	}
 

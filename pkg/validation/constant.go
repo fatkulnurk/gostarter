@@ -2,8 +2,8 @@ package validation
 
 const (
 	RuleRequired     = "required"
-	RuleStrMinLength = "strminlength="
-	RuleStrMaxLength = "strmaxlength="
+	RuleStrMinLength = "strminlen="
+	RuleStrMaxLength = "strmaxlen="
 	RuleNumMin       = "nummin="
 	RuleNumMax       = "nummax="
 	RuleEmail        = "email"
