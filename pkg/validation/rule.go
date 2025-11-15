@@ -1,9 +1,13 @@
 package validation
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/url"
 	"strings"
+	"time"
+
+	"github.com/google/uuid"
 )
 
 // Rule adalah fungsi yang memvalidasi satu field.
@@ -319,3 +323,175 @@ func Url(message string) Rule {
 		return nil
 	}
 }
+
+func Date(message string) Rule {
+	return func(field string, value any) *Error {
+		s, ok := value.(string)
+		if !ok {
+			return &Error{
+				Field:   field,
+				Message: ErrorMessageString,
+			}
+		}
+
+		s = strings.TrimSpace(s)
+		if s == "" {
+			// Biarkan Required yang handle jika dipakai
+			return nil
+		}
+
+		_, err := time.Parse("2006-01-02", s)
+		if err != nil {
+			msg := message
+			if msg == "" {
+				msg = ErrorMessageInvalidDate
+			}
+			return &Error{Field: field, Message: msg}
+		}
+
+		return nil
+	}
+}
+
+func AlphaNumeric(message string) Rule {
+	return func(field string, value any) *Error {
+		s, ok := value.(string)
+		if !ok {
+			return &Error{
+				Field:   field,
+				Message: ErrorMessageString,
+			}
+		}
+
+		s = strings.TrimSpace(s)
+		if s == "" {
+			// Biarkan Required yang handle jika dipakai
+			return nil
+		}
+
+		for _, ch := range s {
+			if !((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9')) {
+				msg := message
+				if msg == "" {
+					msg = ErrorMessageInvalidAlphaNumeric
+				}
+				return &Error{Field: field, Message: msg}
+			}
+		}
+
+		return nil
+	}
+}
+
+func UUID(message string) Rule {
+	return func(field string, value any) *Error {
+		s, ok := value.(string)
+		if !ok {
+			return &Error{
+				Field:   field,
+				Message: ErrorMessageString,
+			}
+		}
+
+		s = strings.TrimSpace(s)
+		if s == "" {
+			// Biarkan Required yang handle jika dipakai
+			return nil
+		}
+
+		_, err := uuid.Parse(s)
+		if err != nil {
+			msg := message
+			if msg == "" {
+				msg = ErrorMessageInvalidUUID
+			}
+			return &Error{Field: field, Message: msg}
+		}
+
+		return nil
+	}
+}
+
+func JSON(message string) Rule {
+	return func(field string, value any) *Error {
+		s, ok := value.(string)
+		if !ok {
+			return &Error{
+				Field:   field,
+				Message: ErrorMessageString,
+			}
+		}
+
+		s = strings.TrimSpace(s)
+		if s == "" {
+			// Biarkan Required yang handle jika dipakai
+			return nil
+		}
+
+		if !json.Valid([]byte(s)) {
+			msg := message
+			if msg == "" {
+				msg = ErrorMessageInvalidJSON
+			}
+			return &Error{Field: field, Message: msg}
+		}
+
+		return nil
+	}
+}
+
+func HexColor(message string) Rule {
+	return func(field string, value any) *Error {
+		s, ok := value.(string)
+		if !ok {
+			return &Error{
+				Field:   field,
+				Message: ErrorMessageString,
+			}
+		}
+
+		s = strings.TrimSpace(s)
+		if s == "" {
+			// Biarkan Required yang handle jika dipakai
+			return nil
+		}
+
+		if !strings.HasPrefix(s, "#") || len(s) != 7 {
+			msg := message
+			if msg == "" {
+				msg = ErrorMessageInvalidHexColor
+			}
+			return &Error{Field: field, Message: msg}
+		}
+
+		for _, ch := range s[1:] {
+			if !((ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F')) {
+				msg := message
+				if msg == "" {
+					msg = ErrorMessageInvalidHexColor
+				}
+				return &Error{Field: field, Message: msg}
+			}
+		}
+
+		return nil
+	}
+}
+
+func CreditCard(message string) Rule {
+	return func(field string, value any) *Error {
+		s, ok := value.(string)
+		if !ok {
+			return &Error{
+				Field:   field,
+				Message: ErrorMessageString,
+			}
+		}
+
+		s = strings.TrimSpace(s)
+		if s == "" {
+			// Biarkan Required yang handle jika dipakai
+			return nil
+		}
+
+		
