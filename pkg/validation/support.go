@@ -145,33 +145,33 @@ func parseTagToRules(tag string) []Rule {
 				}
 				return nil
 			}))
-		case p == "username":
+		case p == RuleUsername:
 			rules = append(rules, Username(""))
-		case p == "phone":
+		case p == RulePhone:
 			rules = append(rules, Phone(""))
-		case p == "password":
+		case p == RulePassword:
 			rules = append(rules, Password(""))
-		case p == "url":
+		case p == RuleURL:
 			rules = append(rules, Url(""))
-		case p == "date":
+		case p == RuleDate:
 			rules = append(rules, Date(""))
-		case p == "alphanumeric":
+		case p == RuleAlphaNumeric:
 			rules = append(rules, AlphaNumeric(""))
-		case p == "uuid":
+		case p == RuleUUID:
 			rules = append(rules, UUID(""))
-		case p == "json":
+		case p == RuleJSON:
 			rules = append(rules, JSON(""))
-		case p == "hexcolor":
+		case p == RuleHexColor:
 			rules = append(rules, HexColor(""))
-		case p == "creditcard":
+		case p == RuleCreditCard:
 			rules = append(rules, CreditCard(""))
-		case p == "postal_code":
+		case p == RulePostalCode:
 			rules = append(rules, PostalCode(""))
-		case p == "base64":
+		case p == RuleBase64:
 			rules = append(rules, Base64(""))
 		default:
-			// Tag tidak dikenal -> di-skip saja
-			panic("tag tidak dikenal: " + p)
+			// Tag tidak dikenal
+			panic("unknown tag: " + p)
 		}
 	}
 

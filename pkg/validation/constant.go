@@ -7,6 +7,18 @@ const (
 	RuleNumMin       = "nummin="
 	RuleNumMax       = "nummax="
 	RuleEmail        = "email"
+	RulePhone        = "phone"
+	RuleUsername     = "username"
+	RulePassword     = "password"
+	RuleURL          = "url"
+	RuleDate         = "date"
+	RuleAlphaNumeric = "alphanumeric"
+	RuleUUID         = "uuid"
+	RuleJSON         = "json"
+	RuleHexColor     = "hexcolor"
+	RuleCreditCard   = "creditcard"
+	RulePostalCode   = "postalcode"
+	RuleBase64       = "base64"
 )
 
 const (
