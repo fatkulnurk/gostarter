@@ -494,4 +494,56 @@ func CreditCard(message string) Rule {
 			return nil
 		}
 
-		
+		// normalisasi: ambil hanya digit
+		digits := make([]int, 0, len(s))
+		for _, ch := range s {
+			if ch >= '0' && ch <= '9' {
+				digits = append(digits, int(ch-'0'))
+			} else if ch == ' ' || ch == '-' {
+				// diabaikan (formatting saja)
+				continue
+			} else {
+				// karakter lain tidak diizinkan
+				msg := message
+				if msg == "" {
+					msg = ErrorMessageInvalidCreditCard
+				}
+				return &Error{Field: field, Message: msg}
+			}
+		}
+
+		// panjang tipikal kartu kredit 13–19 digit
+		if len(digits) < 13 || len(digits) > 19 {
+			msg := message
+			if msg == "" {
+				msg = ErrorMessageInvalidCreditCard
+			}
+			return &Error{Field: field, Message: msg}
+		}
+
+		// algoritma Luhn
+		sum := 0
+		double := false
+		for i := len(digits) - 1; i >= 0; i-- {
+			d := digits[i]
+			if double {
+				d *= 2
+				if d > 9 {
+					d -= 9
+				}
+			}
+			sum += d
+			double = !double
+		}
+
+		if sum%10 != 0 {
+			msg := message
+			if msg == "" {
+				msg = ErrorMessageInvalidCreditCard
+			}
+			return &Error{Field: field, Message: msg}
+		}
+
+		return nil
+	}
+}

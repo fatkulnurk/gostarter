@@ -11,7 +11,7 @@ type RegisterRequest struct {
 	Name      string `json:"name"     validate:"required,strminlen=3,strmaxlen=50"`
 	Email     string `json:"email"    validate:"required,email"`
 	Age       int    `json:"age"      validate:"nummin=18,nummax=60"`
-	Username  string `json:"username" validate:"required,strminlen=3,strmaxlen=15"`
+	Username  string
 	Bio       string `json:"bio"      validate:"strmaxlen=200"`
 }
 
