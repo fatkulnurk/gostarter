@@ -1,6 +1,7 @@
 package validation
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"net/url"
@@ -540,6 +541,74 @@ func CreditCard(message string) Rule {
 			msg := message
 			if msg == "" {
 				msg = ErrorMessageInvalidCreditCard
+			}
+			return &Error{Field: field, Message: msg}
+		}
+
+		return nil
+	}
+}
+
+func PostalCode(message string) Rule {
+	return func(field string, value any) *Error {
+		s, ok := value.(string)
+		if !ok {
+			return &Error{
+				Field:   field,
+				Message: ErrorMessageString,
+			}
+		}
+
+		s = strings.TrimSpace(s)
+		if s == "" {
+			// Biarkan Required yang handle jika dipakai
+			return nil
+		}
+
+		// contoh: kode pos Indonesia = 5 digit
+		if len(s) != 5 {
+			msg := message
+			if msg == "" {
+				msg = ErrorMessageInvalidPostalCode
+			}
+			return &Error{Field: field, Message: msg}
+		}
+
+		for _, ch := range s {
+			if ch < '0' || ch > '9' {
+				msg := message
+				if msg == "" {
+					msg = ErrorMessageInvalidPostalCode
+				}
+				return &Error{Field: field, Message: msg}
+			}
+		}
+
+		return nil
+	}
+}
+
+func Base64(message string) Rule {
+	return func(field string, value any) *Error {
+		s, ok := value.(string)
+		if !ok {
+			return &Error{
+				Field:   field,
+				Message: ErrorMessageString,
+			}
+		}
+
+		s = strings.TrimSpace(s)
+		if s == "" {
+			// Biarkan Required yang handle jika dipakai
+			return nil
+		}
+
+		_, err := base64.StdEncoding.DecodeString(s)
+		if err != nil {
+			msg := message
+			if msg == "" {
+				msg = ErrorMessageInvalidBase64
 			}
 			return &Error{Field: field, Message: msg}
 		}
