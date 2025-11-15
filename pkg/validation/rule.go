@@ -8,6 +8,13 @@ import (
 // Rule adalah fungsi yang memvalidasi satu field.
 type Rule func(field string, value any) *Error
 
+// Custom : membuat rule kustom sendiri.
+func Custom(f func(field string, value any) *Error) Rule {
+	return func(field string, value any) *Error {
+		return f(field, value)
+	}
+}
+
 // =========================
 //  RULE BUILDER UMUM
 // =========================
@@ -139,41 +146,33 @@ func Max(max float64, message string) Rule {
 	}
 }
 
-// Custom : membuat rule kustom sendiri.
-func Custom(f func(field string, value any) *Error) Rule {
+func Username(message string) Rule {
 	return func(field string, value any) *Error {
-		return f(field, value)
-	}
-}
+		s, ok := value.(string)
+		if !ok {
+			return &Error{
+				Field:   field,
+				Message: ErrorMessageString,
+			}
+		}
 
-// helper: konversi berbagai tipe angka ke float64.
-func toFloat(v any) (float64, bool) {
-	switch n := v.(type) {
-	case int:
-		return float64(n), true
-	case int8:
-		return float64(n), true
-	case int16:
-		return float64(n), true
-	case int32:
-		return float64(n), true
-	case int64:
-		return float64(n), true
-	case uint:
-		return float64(n), true
-	case uint8:
-		return float64(n), true
-	case uint16:
-		return float64(n), true
-	case uint32:
-		return float64(n), true
-	case uint64:
-		return float64(n), true
-	case float32:
-		return float64(n), true
-	case float64:
-		return n, true
-	default:
-		return 0, false
+		if len(s) < 6 || len(s) > 16 {
+			msg := message
+			if msg == "" {
+				msg = fmt.Sprintf(ErrorMessageNumberBetween, float64(6), float64(16))
+			}
+			return &Error{Field: field, Message: msg}
+		}
+
+		for _, ch := range s {
+			if !((ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9') || ch == '_') {
+				return &Error{
+					Field:   field,
+					Message: ErrorMessageInvalidUsername,
+				}
+			}
+		}
+
+		return nil
 	}
 }

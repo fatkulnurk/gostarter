@@ -14,7 +14,7 @@ const (
 	ErrorMessageInvalidEmail        = "is not a valid email"
 	ErrorMessageInvalidPhone        = "is not a valid phone number"
 	ErrorMessageInvalidPassword     = "must be at least 8 characters and include uppercase, lowercase, number, and special character"
-	ErrorMessageInvalidUsername     = "must be 3-16 characters and only contain letters, numbers, and underscores"
+	ErrorMessageInvalidUsername     = "must be 6-16 characters and only contain letters, numbers, and underscores"
 	ErrorMessageInvalidURL          = "is not a valid URL"
 	ErrorMessageInvalidIP           = "is not a valid IP address"
 	ErrorMessageInvalidIPv4         = "is not a valid IPv4 address"
@@ -47,4 +47,5 @@ const (
 	ErrorMessageNotEqual            = "must not be equal to %s"
 	ErrorMessageNotEqualStr         = "must not be equal to %s"
 	ErrorMessageNotIn               = "must not be in %s"
+	ErrorMessageNumberBetween       = "must be between %.2f and %.2f"
 )
