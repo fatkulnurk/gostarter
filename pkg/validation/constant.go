@@ -19,6 +19,9 @@ const (
 	RuleCreditCard   = "creditcard"
 	RulePostalCode   = "postalcode"
 	RuleBase64       = "base64"
+	RuleIP           = "ip"
+	RuleIPv4         = "ipv4"
+	RuleIPv6         = "ipv6"
 )
 
 const (

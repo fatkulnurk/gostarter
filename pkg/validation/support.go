@@ -76,7 +76,7 @@ func parseTagToRules(tag string) []Rule {
 				}
 				return nil
 			}))
-		case p == "ip":
+		case p == RuleIP:
 			rules = append(rules, Custom(func(field string, value any) *Error {
 				s, ok := value.(string)
 				if !ok {
@@ -99,7 +99,7 @@ func parseTagToRules(tag string) []Rule {
 				}
 				return nil
 			}))
-		case p == "ipv4":
+		case p == RuleIPv4:
 			rules = append(rules, Custom(func(field string, value any) *Error {
 				s, ok := value.(string)
 				if !ok {
@@ -122,7 +122,7 @@ func parseTagToRules(tag string) []Rule {
 				}
 				return nil
 			}))
-		case p == "ipv6":
+		case p == RuleIPv6:
 			rules = append(rules, Custom(func(field string, value any) *Error {
 				s, ok := value.(string)
 				if !ok {
