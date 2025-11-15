@@ -14,7 +14,7 @@ import (
 	"time"
 
 	"github.com/fatkulnurk/gostarter/pkg/config"
-	"github.com/fatkulnurk/gostarter/pkg/utils"
+	"github.com/fatkulnurk/gostarter/pkg/support"
 )
 
 type LocalStorage struct {
@@ -80,7 +80,7 @@ func (s *LocalStorage) Upload(ctx context.Context, input UploadInput) (*UploadOu
 		Name:      filepath.Base(input.FileName),
 		Path:      input.FileName,
 		Size:      size,
-		SizeHuman: utils.FormatSize(size),
+		SizeHuman: support.FormatSize(size),
 	}, nil
 }
 
@@ -220,7 +220,7 @@ func (s *LocalStorage) File(ctx context.Context, path string, expiryTempUrl *tim
 		Name:         filepath.Base(path),
 		Path:         path,
 		Size:         fileInfo.Size(),
-		SizeHuman:    utils.FormatSize(fileInfo.Size()),
+		SizeHuman:    support.FormatSize(fileInfo.Size()),
 		MimeType:     mimeType,
 		LastModified: fileInfo.ModTime(),
 		Visibility:   VisibilityPublic, // Local files are always considered public

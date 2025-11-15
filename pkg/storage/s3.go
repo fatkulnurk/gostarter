@@ -11,12 +11,12 @@ import (
 
 	appcfg "github.com/fatkulnurk/gostarter/pkg/config"
 	"github.com/fatkulnurk/gostarter/pkg/logging"
+	"github.com/fatkulnurk/gostarter/pkg/support"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
-	"github.com/fatkulnurk/gostarter/pkg/utils"
 )
 
 func NewS3Client(cfg appcfg.S3) (*s3.Client, error) {
@@ -92,7 +92,7 @@ func (s *S3Storage) Upload(ctx context.Context, input UploadInput) (*UploadOutpu
 		Name:      fileName,
 		Path:      input.FileName,
 		Size:      size,
-		SizeHuman: utils.BytesToHumanReadable(size),
+		SizeHuman: support.BytesToHumanReadable(size),
 	}, nil
 }
 
@@ -202,7 +202,7 @@ func (s *S3Storage) File(ctx context.Context, path string, expiryTempUrl *time.D
 		Name:         filepath.Base(path),
 		Path:         path,
 		Size:         size,
-		SizeHuman:    utils.BytesToHumanReadable(size),
+		SizeHuman:    support.BytesToHumanReadable(size),
 		MimeType:     aws.ToString(result.ContentType),
 		LastModified: lastModified,
 		Visibility:   visibility,

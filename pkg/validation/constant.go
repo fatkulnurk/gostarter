@@ -61,3 +61,15 @@ const (
 	ErrorMessageNotIn               = "must not be in %s"
 	ErrorMessageNumberBetween       = "must be between %.2f and %.2f"
 )
+
+const (
+	DBVarcharMaxLength = 255
+	DBTextMaxLength    = 65535
+	DBTinyintMaxValue  = 127
+	DBSmallintMaxValue = 32767
+	DBIntMaxValue      = 2147483647
+	DBBigintMaxValue   = 9223372036854775807
+	DBFloatMaxDigits   = 7
+	DBDoubleMaxDigits  = 15
+	DBDecimalMaxDigits = 65
+)
