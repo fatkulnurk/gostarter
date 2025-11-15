@@ -176,3 +176,108 @@ func Username(message string) Rule {
 		return nil
 	}
 }
+
+func PhoneNumber(message string) Rule {
+	return func(field string, value any) *Error {
+		s, ok := value.(string)
+		if !ok {
+			return &Error{
+				Field:   field,
+				Message: ErrorMessageString,
+			}
+		}
+
+		s = strings.TrimSpace(s)
+		if s == "" {
+			// Biarkan Required yang handle jika dipakai
+			return nil
+		}
+
+		digitCount := 0
+		for i, ch := range s {
+			// hitung digit
+			if ch >= '0' && ch <= '9' {
+				digitCount++
+				continue
+			}
+
+			// karakter non-digit yang diizinkan
+			if ch == ' ' || ch == '-' || ch == '(' || ch == ')' {
+				continue
+			}
+			if ch == '+' && i == 0 {
+				continue
+			}
+
+			// selain itu dianggap tidak valid
+			return &Error{
+				Field:   field,
+				Message: ErrorMessageInvalidPhone,
+			}
+		}
+
+		if digitCount < 10 || digitCount > 15 {
+			msg := message
+			if msg == "" {
+				msg = fmt.Sprintf(ErrorMessageNumberBetween, float64(10), float64(15))
+			}
+			return &Error{Field: field, Message: msg}
+		}
+
+		return nil
+	}
+}
+
+func Password(message string) Rule {
+	return func(field string, value any) *Error {
+		s, ok := value.(string)
+		if !ok {
+			return &Error{
+				Field:   field,
+				Message: ErrorMessageString,
+			}
+		}
+
+		s = strings.TrimSpace(s)
+		if s == "" {
+			// Biarkan Required yang handle jika dipakai
+			return nil
+		}
+
+		if len(s) < 8 || len(s) > 16 {
+			msg := message
+			if msg == "" {
+				msg = fmt.Sprintf(ErrorMessageNumberBetween, float64(8), float64(16))
+			}
+			return &Error{Field: field, Message: msg}
+		}
+
+		hasUpper := false
+		hasLower := false
+		hasDigit := false
+		hasSpecial := false
+
+		for _, ch := range s {
+			switch {
+			case ch >= 'A' && ch <= 'Z':
+				hasUpper = true
+			case ch >= 'a' && ch <= 'z':
+				hasLower = true
+			case ch >= '0' && ch <= '9':
+				hasDigit = true
+			default:
+				hasSpecial = true
+			}
+		}
+
+		if !(hasUpper && hasLower && hasDigit && hasSpecial) {
+			msg := message
+			if msg == "" {
+				msg = ErrorMessageInvalidPassword
+			}
+			return &Error{Field: field, Message: msg}
+		}
+
+		return nil
+	}
+}
