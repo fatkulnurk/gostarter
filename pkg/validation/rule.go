@@ -2,6 +2,7 @@ package validation
 
 import (
 	"fmt"
+	"net/url"
 	"strings"
 )
 
@@ -274,6 +275,43 @@ func Password(message string) Rule {
 			msg := message
 			if msg == "" {
 				msg = ErrorMessageInvalidPassword
+			}
+			return &Error{Field: field, Message: msg}
+		}
+
+		return nil
+	}
+}
+
+func Url(message string) Rule {
+	return func(field string, value any) *Error {
+		s, ok := value.(string)
+		if !ok {
+			return &Error{
+				Field:   field,
+				Message: ErrorMessageString,
+			}
+		}
+
+		s = strings.TrimSpace(s)
+		if s == "" {
+			// Biarkan Required yang handle jika dipakai
+			return nil
+		}
+
+		u, err := url.Parse(s)
+		if err != nil || u.Scheme == "" || u.Host == "" {
+			msg := message
+			if msg == "" {
+				msg = ErrorMessageInvalidURL
+			}
+			return &Error{Field: field, Message: msg}
+		}
+
+		if u.Scheme != "http" && u.Scheme != "https" {
+			msg := message
+			if msg == "" {
+				msg = ErrorMessageInvalidURL
 			}
 			return &Error{Field: field, Message: msg}
 		}
