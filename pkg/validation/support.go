@@ -1,0 +1,85 @@
+package validation
+
+import (
+	"strconv"
+	"strings"
+)
+
+// parseTagToRules mengubah string tag validate jadi slice Rule.
+//
+// Contoh:
+//
+//	"required,minlen=3,maxlen=10,email"
+//	"min=18,max=60"
+func parseTagToRules(tag string) []Rule {
+	parts := strings.Split(tag, ",")
+	var rules []Rule
+
+	for _, part := range parts {
+		p := strings.TrimSpace(part)
+		if p == "" {
+			continue
+		}
+
+		switch {
+		case p == RuleRequired:
+			rules = append(rules, Required(""))
+
+		case strings.HasPrefix(p, RuleMinLength):
+			nStr := strings.TrimPrefix(p, RuleMinLength)
+			n, err := strconv.Atoi(nStr)
+			if err == nil {
+				rules = append(rules, MinLength(n, ""))
+			}
+
+		case strings.HasPrefix(p, RuleMaxLength):
+			nStr := strings.TrimPrefix(p, RuleMaxLength)
+			n, err := strconv.Atoi(nStr)
+			if err == nil {
+				rules = append(rules, MaxLength(n, ""))
+			}
+
+		case strings.HasPrefix(p, "min="):
+			nStr := strings.TrimPrefix(p, "min=")
+			n, err := strconv.ParseFloat(nStr, 64)
+			if err == nil {
+				rules = append(rules, Min(n, ""))
+			}
+
+		case strings.HasPrefix(p, "max="):
+			nStr := strings.TrimPrefix(p, "max=")
+			n, err := strconv.ParseFloat(nStr, 64)
+			if err == nil {
+				rules = append(rules, Max(n, ""))
+			}
+
+		case p == "email":
+			rules = append(rules, Custom(func(field string, value any) *Error {
+				s, ok := value.(string)
+				if !ok {
+					return &Error{
+						Field:   field,
+						Message: "harus berupa string (email)",
+					}
+				}
+				s = strings.TrimSpace(s)
+				if s == "" {
+					// Biar rule Required yang handle kalau dipakai
+					return nil
+				}
+				if !strings.Contains(s, "@") {
+					return &Error{
+						Field:   field,
+						Message: "format email tidak valid",
+					}
+				}
+				return nil
+			}))
+
+		default:
+			// Tag tidak dikenal -> di-skip saja
+		}
+	}
+
+	return rules
+}
