@@ -19,7 +19,7 @@ func Required(message string) Rule {
 		msg := message
 		if value == nil {
 			if msg == "" {
-				msg = fmt.Sprintf(ErrorMessageRequired, field)
+				msg = ErrorMessageRequired
 			}
 			return &Error{Field: field, Message: msg}
 		}
@@ -28,7 +28,7 @@ func Required(message string) Rule {
 		if s, ok := value.(string); ok {
 			if strings.TrimSpace(s) == "" {
 				if msg == "" {
-					msg = fmt.Sprintf(ErrorMessageRequired, field)
+					msg = ErrorMessageRequired
 				}
 				return &Error{Field: field, Message: msg}
 			}
@@ -45,14 +45,14 @@ func MinLength(min int, message string) Rule {
 		if !ok {
 			return &Error{
 				Field:   field,
-				Message: fmt.Sprintf("harus berupa string (minimal %d karakter)", min),
+				Message: ErrorMessageString,
 			}
 		}
 
 		if len(s) < min {
 			msg := message
 			if msg == "" {
-				msg = fmt.Sprintf("minimal %d karakter", min)
+				msg = fmt.Sprintf(ErrorMessageMinLength, min)
 			}
 			return &Error{Field: field, Message: msg}
 		}
@@ -68,14 +68,14 @@ func MaxLength(max int, message string) Rule {
 		if !ok {
 			return &Error{
 				Field:   field,
-				Message: fmt.Sprintf("harus berupa string (maksimal %d karakter)", max),
+				Message: ErrorMessageString,
 			}
 		}
 
 		if len(s) > max {
 			msg := message
 			if msg == "" {
-				msg = fmt.Sprintf("maksimal %d karakter", max)
+				msg = fmt.Sprintf(ErrorMessageMaxLength, max)
 			}
 			return &Error{Field: field, Message: msg}
 		}
@@ -96,14 +96,14 @@ func Min(min float64, message string) Rule {
 		if !ok {
 			return &Error{
 				Field:   field,
-				Message: "harus berupa angka",
+				Message: ErrorMessageNumber,
 			}
 		}
 
 		if num < min {
 			msg := message
 			if msg == "" {
-				msg = fmt.Sprintf("minimal bernilai %.2f", min)
+				msg = fmt.Sprintf(ErrorMessageMin, min)
 			}
 			return &Error{Field: field, Message: msg}
 		}
@@ -123,14 +123,14 @@ func Max(max float64, message string) Rule {
 		if !ok {
 			return &Error{
 				Field:   field,
-				Message: "harus berupa angka",
+				Message: ErrorMessageNumber,
 			}
 		}
 
 		if num > max {
 			msg := message
 			if msg == "" {
-				msg = fmt.Sprintf("maksimal bernilai %.2f", max)
+				msg = fmt.Sprintf(ErrorMessageMax, max)
 			}
 			return &Error{Field: field, Message: msg}
 		}
