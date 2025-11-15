@@ -38,8 +38,8 @@ func Required(message string) Rule {
 	}
 }
 
-// MinLength : panjang minimal untuk string.
-func MinLength(min int, message string) Rule {
+// StrMinLength : panjang minimal untuk string.
+func StrMinLength(min int, message string) Rule {
 	return func(field string, value any) *Error {
 		s, ok := value.(string)
 		if !ok {
@@ -61,8 +61,8 @@ func MinLength(min int, message string) Rule {
 	}
 }
 
-// MaxLength : panjang maksimal untuk string.
-func MaxLength(max int, message string) Rule {
+// StrMaxLength : panjang maksimal untuk string.
+func StrMaxLength(max int, message string) Rule {
 	return func(field string, value any) *Error {
 		s, ok := value.(string)
 		if !ok {

@@ -25,18 +25,18 @@ func parseTagToRules(tag string) []Rule {
 		case p == RuleRequired:
 			rules = append(rules, Required(""))
 
-		case strings.HasPrefix(p, RuleMinLength):
-			nStr := strings.TrimPrefix(p, RuleMinLength)
+		case strings.HasPrefix(p, RuleStrMinLength):
+			nStr := strings.TrimPrefix(p, RuleStrMinLength)
 			n, err := strconv.Atoi(nStr)
 			if err == nil {
-				rules = append(rules, MinLength(n, ""))
+				rules = append(rules, StrMinLength(n, ""))
 			}
 
-		case strings.HasPrefix(p, RuleMaxLength):
-			nStr := strings.TrimPrefix(p, RuleMaxLength)
+		case strings.HasPrefix(p, RuleStrMaxLength):
+			nStr := strings.TrimPrefix(p, RuleStrMaxLength)
 			n, err := strconv.Atoi(nStr)
 			if err == nil {
-				rules = append(rules, MaxLength(n, ""))
+				rules = append(rules, StrMaxLength(n, ""))
 			}
 
 		case strings.HasPrefix(p, RuleMin):
