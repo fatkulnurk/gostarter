@@ -8,7 +8,7 @@ import (
 	"github.com/fatkulnurk/gostarter/cmd/http"
 	"github.com/fatkulnurk/gostarter/cmd/scheduler"
 	"github.com/fatkulnurk/gostarter/cmd/worker"
-	"github.com/fatkulnurk/gostarter/config"
+	"github.com/fatkulnurk/gostarter/pkg/config"
 )
 
 func ServeApp(svc string, cfg *config.Config) {

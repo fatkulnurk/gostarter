@@ -2,15 +2,16 @@ package scheduler
 
 import (
 	"fmt"
-	"github.com/fatkulnurk/gostarter/config"
+	"log"
+	"time"
+
 	"github.com/fatkulnurk/gostarter/internal/example"
+	"github.com/fatkulnurk/gostarter/pkg/config"
 	"github.com/fatkulnurk/gostarter/pkg/db"
 	"github.com/fatkulnurk/gostarter/pkg/module"
 	pkgqueue "github.com/fatkulnurk/gostarter/pkg/queue"
 	"github.com/fatkulnurk/gostarter/shared/infrastructure"
 	"github.com/hibiken/asynq"
-	"log"
-	"time"
 )
 
 func Serve(cfg *config.Config) {

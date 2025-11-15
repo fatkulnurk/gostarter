@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/fatkulnurk/gostarter/cmd"
-	"github.com/fatkulnurk/gostarter/config"
+	"github.com/fatkulnurk/gostarter/pkg/config"
 	"github.com/fatkulnurk/gostarter/pkg/logging"
 )
 

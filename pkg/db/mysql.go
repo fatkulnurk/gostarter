@@ -3,7 +3,8 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"github.com/fatkulnurk/gostarter/config"
+
+	"github.com/fatkulnurk/gostarter/pkg/config"
 	_ "github.com/go-sql-driver/mysql"
 )
 

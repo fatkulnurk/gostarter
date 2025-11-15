@@ -3,16 +3,17 @@ package http
 import (
 	"context"
 	"fmt"
-	"github.com/fatkulnurk/gostarter/pkg/module"
-	"github.com/fatkulnurk/gostarter/shared/infrastructure"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
+	"github.com/fatkulnurk/gostarter/pkg/config"
+	"github.com/fatkulnurk/gostarter/pkg/module"
+	"github.com/fatkulnurk/gostarter/shared/infrastructure"
+
 	"github.com/fatkulnurk/gostarter/shared/middleware"
 
-	"github.com/fatkulnurk/gostarter/config"
 	"github.com/fatkulnurk/gostarter/internal/example"
 	"github.com/fatkulnurk/gostarter/pkg/db"
 	pkgqueue "github.com/fatkulnurk/gostarter/pkg/queue"

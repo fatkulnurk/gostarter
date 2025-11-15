@@ -1,8 +1,9 @@
 package config
 
 import (
-	"github.com/fatkulnurk/gostarter/pkg/utils"
 	"time"
+
+	"github.com/fatkulnurk/gostarter/pkg/utils"
 
 	"github.com/fatkulnurk/gostarter/shared/constant"
 	"github.com/joho/godotenv"

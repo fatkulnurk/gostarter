@@ -4,17 +4,18 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/fatkulnurk/gostarter/pkg/logging"
 	"io"
 	"path/filepath"
 	"strings"
 	"time"
 
+	appcfg "github.com/fatkulnurk/gostarter/pkg/config"
+	"github.com/fatkulnurk/gostarter/pkg/logging"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
-	appcfg "github.com/fatkulnurk/gostarter/config"
 	"github.com/fatkulnurk/gostarter/pkg/utils"
 )
 

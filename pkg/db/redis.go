@@ -3,7 +3,9 @@ package db
 import (
 	"context"
 	"fmt"
-	"github.com/fatkulnurk/gostarter/config"
+
+	"github.com/fatkulnurk/gostarter/pkg/config"
+
 	"time"
 
 	"github.com/redis/go-redis/v9"

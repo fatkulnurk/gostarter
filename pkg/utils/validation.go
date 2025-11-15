@@ -101,7 +101,7 @@ func ValidateAlphaNumeric(str string) bool {
 	return re.MatchString(str)
 }
 
-func OneOf(value string, options []string) bool {
+func OneOf(value any, options []any) bool {
 	return slices.Contains(options, value)
 }
 
