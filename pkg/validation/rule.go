@@ -183,7 +183,7 @@ func Username(message string) Rule {
 	}
 }
 
-func PhoneNumber(message string) Rule {
+func Phone(message string) Rule {
 	return func(field string, value any) *Error {
 		s, ok := value.(string)
 		if !ok {
